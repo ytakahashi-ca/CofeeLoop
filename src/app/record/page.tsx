@@ -325,7 +325,7 @@ export default function RecordPage() {
                 LINE通知が有効です。<br />新豆入荷時にお知らせします。
               </p>
             </div>
-            <button onClick={() => router.push('/')} className="btn-primary w-full">
+            <button onClick={() => router.push('/profile')} className="btn-primary w-full">
               ホームへ戻る
             </button>
           </div>
