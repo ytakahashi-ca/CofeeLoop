@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default function HomePage() {
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen px-6 gap-8">
+    <main className="flex flex-col items-center justify-center min-h-screen px-6 gap-10">
       {/* ロゴ */}
       <div className="text-center">
         <h1 className="font-serif text-5xl font-bold text-accent mb-2">CoffeeLoop.</h1>
@@ -12,29 +12,20 @@ export default function HomePage() {
         </p>
       </div>
 
-      {/* ユーザー側 */}
-      <div className="w-full flex flex-col gap-3">
-        <p className="font-mono text-xs text-text-muted tracking-widest uppercase mb-1">
-          ユーザー
-        </p>
-        <Link href="/record" className="btn-primary text-center block">
-          ☕ 来店記録をする
-        </Link>
-        <Link href="/profile" className="btn-secondary text-center block">
-          テイストプロフィール
-        </Link>
-      </div>
+      <p className="font-sans text-sm text-text-muted text-center">
+        ご利用の方法を選択してください
+      </p>
 
-      {/* 区切り */}
-      <div className="w-full border-t border-border" />
+      {/* ロール選択 */}
+      <div className="w-full flex flex-col gap-4">
+        <Link href="/user" className="btn-primary text-center block py-5">
+          <span className="block text-lg mb-1">☕ ユーザーとして使う</span>
+          <span className="block font-mono text-xs opacity-70 tracking-wide">来店記録・テイストプロフィール</span>
+        </Link>
 
-      {/* 店側 */}
-      <div className="w-full flex flex-col gap-3">
-        <p className="font-mono text-xs text-text-muted tracking-widest uppercase mb-1">
-          店舗オーナー
-        </p>
-        <Link href="/shop" className="btn-secondary text-center block">
-          📊 ダッシュボード
+        <Link href="/shop" className="btn-secondary text-center block py-5">
+          <span className="block text-lg mb-1">📊 店舗オーナーとして使う</span>
+          <span className="block font-mono text-xs opacity-70 tracking-wide">ダッシュボード・顧客管理</span>
         </Link>
       </div>
     </main>
