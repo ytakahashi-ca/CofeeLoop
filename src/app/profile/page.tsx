@@ -28,15 +28,15 @@ export default function ProfilePage() {
         </div>
 
         {/* スタンプカード */}
-        <div className="bg-gradient-to-br from-[#2a1e10] to-[#3a2810] border border-[#5a4020] rounded-2xl p-4">
+        <div className="bg-gradient-to-br from-[#38261a] to-[#4c3420] border border-[#6e5030] rounded-2xl p-4">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <p className="font-mono text-xs text-[#8a7040] uppercase tracking-widest mb-1">スタンプカード</p>
-              <p className="font-serif text-base text-[#f0d060]">Koffee Mameya</p>
+              <p className="font-mono text-xs text-[#a08852] uppercase tracking-widest mb-1">スタンプカード</p>
+              <p className="font-serif text-base text-[#f8e068]">Koffee Mameya</p>
             </div>
             <div className="text-right">
               <p className="font-mono text-sm text-gold font-medium">7 / 10</p>
-              <p className="font-mono text-xs text-[#8a7040]">あと3つで特典</p>
+              <p className="font-mono text-xs text-[#a08852]">あと3つで特典</p>
             </div>
           </div>
 
@@ -45,10 +45,10 @@ export default function ProfilePage() {
             {STAMPS.map(stamp => (
               <div key={stamp.id} className={`aspect-square rounded-full flex items-center justify-center text-lg border ${
                 stamp.type === 'purchase'
-                  ? 'bg-gradient-to-br from-[#e8c040] to-[#a87820] border-[#d4af37] shadow-md'
+                  ? 'bg-gradient-to-br from-[#f0cc50] to-[#c08c28] border-[#e0c040] shadow-md'
                   : stamp.type === 'bonus'
-                  ? 'bg-gradient-to-br from-[#d4956a] to-[#8a4820] border-accent'
-                  : 'bg-[#221508] border-[#5a4020]'
+                  ? 'bg-gradient-to-br from-[#e8a878] to-[#9e5a2c] border-accent'
+                  : 'bg-[#301c0c] border-[#6e5030]'
               }`}>
                 {stamp.type === 'purchase' ? '☕' : stamp.type === 'bonus' ? '★' : ''}
               </div>
@@ -56,25 +56,25 @@ export default function ProfilePage() {
           </div>
 
           {/* バー */}
-          <div className="bg-[#221508] rounded h-1 mb-3 overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-[#a87820] to-[#d4af37] rounded" style={{ width: '70%' }} />
+          <div className="bg-[#301c0c] rounded h-1 mb-3 overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-[#c08c28] to-[#e0c040] rounded" style={{ width: '70%' }} />
           </div>
 
           {/* 特典 */}
           <div className="flex items-center gap-2 bg-gold/5 border border-gold/15 rounded-xl px-3 py-2">
             <span className="text-sm">🎁</span>
-            <span className="font-mono text-xs text-[#a09050] flex-1">10杯達成で特典</span>
-            <span className="text-sm text-[#f0d060]">無料ドリンク 1杯</span>
+            <span className="font-mono text-xs text-[#baa860] flex-1">10杯達成で特典</span>
+            <span className="text-sm text-[#f8e068]">無料ドリンク 1杯</span>
           </div>
 
           {/* 凡例 */}
           <div className="flex gap-4 mt-3">
-            <div className="flex items-center gap-1.5 font-mono text-xs text-[#8a7040]">
-              <div className="w-2 h-2 rounded-full bg-gradient-to-br from-[#e8c040] to-[#a87820]" />
+            <div className="flex items-center gap-1.5 font-mono text-xs text-[#a08852]">
+              <div className="w-2 h-2 rounded-full bg-gradient-to-br from-[#f0cc50] to-[#c08c28]" />
               購入スタンプ
             </div>
-            <div className="flex items-center gap-1.5 font-mono text-xs text-[#8a7040]">
-              <div className="w-2 h-2 rounded-full bg-gradient-to-br from-[#d4956a] to-[#8a4820]" />
+            <div className="flex items-center gap-1.5 font-mono text-xs text-[#a08852]">
+              <div className="w-2 h-2 rounded-full bg-gradient-to-br from-[#e8a878] to-[#9e5a2c]" />
               記録ボーナス
             </div>
           </div>
@@ -88,21 +88,21 @@ export default function ProfilePage() {
           </div>
           <div className="flex justify-center mb-4">
             <svg viewBox="0 0 180 180" className="w-44 h-44">
-              <polygon points="90,15 155,52.5 155,127.5 90,165 25,127.5 25,52.5" fill="none" stroke="#3d3028" strokeWidth="1"/>
-              <polygon points="90,37 132,60 132,120 90,143 48,120 48,60" fill="none" stroke="#3d3028" strokeWidth="0.6"/>
-              <polygon points="90,59 109,70 109,110 90,121 71,110 71,70" fill="none" stroke="#3d3028" strokeWidth="0.4"/>
-              <line x1="90" y1="15" x2="90" y2="165" stroke="#3d3028" strokeWidth="0.5"/>
-              <line x1="25" y1="52.5" x2="155" y2="127.5" stroke="#3d3028" strokeWidth="0.5"/>
-              <line x1="25" y1="127.5" x2="155" y2="52.5" stroke="#3d3028" strokeWidth="0.5"/>
-              <polygon points="90,22 140,72 100,138 50,105" fill="#d4956a" fillOpacity="0.18" stroke="#d4956a" strokeWidth="2"/>
-              <circle cx="90" cy="22" r="4" fill="#d4956a"/>
-              <circle cx="140" cy="72" r="4" fill="#d4956a"/>
-              <circle cx="100" cy="138" r="4" fill="#d4956a"/>
-              <circle cx="50" cy="105" r="4" fill="#d4956a"/>
-              <text x="90" y="10" textAnchor="middle" fontFamily="DM Mono" fontSize="10" fill="#a89080">酸味</text>
-              <text x="162" y="76" fontFamily="DM Mono" fontSize="10" fill="#a89080">苦味</text>
-              <text x="162" y="132" fontFamily="DM Mono" fontSize="10" fill="#a89080">コク</text>
-              <text x="18" y="110" textAnchor="end" fontFamily="DM Mono" fontSize="10" fill="#a89080">甘み</text>
+              <polygon points="90,15 155,52.5 155,127.5 90,165 25,127.5 25,52.5" fill="none" stroke="#524038" strokeWidth="1"/>
+              <polygon points="90,37 132,60 132,120 90,143 48,120 48,60" fill="none" stroke="#524038" strokeWidth="0.6"/>
+              <polygon points="90,59 109,70 109,110 90,121 71,110 71,70" fill="none" stroke="#524038" strokeWidth="0.4"/>
+              <line x1="90" y1="15" x2="90" y2="165" stroke="#524038" strokeWidth="0.5"/>
+              <line x1="25" y1="52.5" x2="155" y2="127.5" stroke="#524038" strokeWidth="0.5"/>
+              <line x1="25" y1="127.5" x2="155" y2="52.5" stroke="#524038" strokeWidth="0.5"/>
+              <polygon points="90,22 140,72 100,138 50,105" fill="#e8a878" fillOpacity="0.18" stroke="#e8a878" strokeWidth="2"/>
+              <circle cx="90" cy="22" r="4" fill="#e8a878"/>
+              <circle cx="140" cy="72" r="4" fill="#e8a878"/>
+              <circle cx="100" cy="138" r="4" fill="#e8a878"/>
+              <circle cx="50" cy="105" r="4" fill="#e8a878"/>
+              <text x="90" y="10" textAnchor="middle" fontFamily="DM Mono" fontSize="10" fill="#c0a898">酸味</text>
+              <text x="162" y="76" fontFamily="DM Mono" fontSize="10" fill="#c0a898">苦味</text>
+              <text x="162" y="132" fontFamily="DM Mono" fontSize="10" fill="#c0a898">コク</text>
+              <text x="18" y="110" textAnchor="end" fontFamily="DM Mono" fontSize="10" fill="#c0a898">甘み</text>
             </svg>
           </div>
           <div className="grid grid-cols-2 gap-2">

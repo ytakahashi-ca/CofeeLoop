@@ -303,20 +303,20 @@ export default function RecordPage() {
             <div className="w-full bg-surface2 border border-border rounded-2xl p-4">
               <p className="font-mono text-xs text-text-muted uppercase tracking-widest mb-3 text-left">テイストプロフィール更新</p>
               <svg viewBox="0 0 180 120" className="w-full max-w-xs mx-auto">
-                <polygon points="90,8 158,44 158,86 90,104 22,86 22,44" fill="none" stroke="#3d3028" strokeWidth="1"/>
-                <polygon points="90,28 132,54 132,80 90,88 48,80 48,54" fill="none" stroke="#3d3028" strokeWidth="0.5"/>
-                <line x1="90" y1="8" x2="90" y2="104" stroke="#3d3028" strokeWidth="0.5"/>
-                <line x1="22" y1="44" x2="158" y2="86" stroke="#3d3028" strokeWidth="0.5"/>
-                <line x1="22" y1="86" x2="158" y2="44" stroke="#3d3028" strokeWidth="0.5"/>
-                <polygon points="90,16 142,56 108,90 42,78" fill="#d4956a" fillOpacity="0.2" stroke="#d4956a" strokeWidth="1.5"/>
-                <circle cx="90" cy="16" r="3" fill="#d4956a"/>
-                <circle cx="142" cy="56" r="3" fill="#d4956a"/>
-                <circle cx="108" cy="90" r="3" fill="#d4956a"/>
-                <circle cx="42" cy="78" r="3" fill="#d4956a"/>
-                <text x="90" y="4" textAnchor="middle" fontFamily="DM Mono" fontSize="8" fill="#7a6458">酸味</text>
-                <text x="163" y="59" fontFamily="DM Mono" fontSize="8" fill="#7a6458">苦味</text>
-                <text x="163" y="89" fontFamily="DM Mono" fontSize="8" fill="#7a6458">コク</text>
-                <text x="16" y="82" textAnchor="end" fontFamily="DM Mono" fontSize="8" fill="#7a6458">甘み</text>
+                <polygon points="90,8 158,44 158,86 90,104 22,86 22,44" fill="none" stroke="#524038" strokeWidth="1"/>
+                <polygon points="90,28 132,54 132,80 90,88 48,80 48,54" fill="none" stroke="#524038" strokeWidth="0.5"/>
+                <line x1="90" y1="8" x2="90" y2="104" stroke="#524038" strokeWidth="0.5"/>
+                <line x1="22" y1="44" x2="158" y2="86" stroke="#524038" strokeWidth="0.5"/>
+                <line x1="22" y1="86" x2="158" y2="44" stroke="#524038" strokeWidth="0.5"/>
+                <polygon points="90,16 142,56 108,90 42,78" fill="#e8a878" fillOpacity="0.2" stroke="#e8a878" strokeWidth="1.5"/>
+                <circle cx="90" cy="16" r="3" fill="#e8a878"/>
+                <circle cx="142" cy="56" r="3" fill="#e8a878"/>
+                <circle cx="108" cy="90" r="3" fill="#e8a878"/>
+                <circle cx="42" cy="78" r="3" fill="#e8a878"/>
+                <text x="90" y="4" textAnchor="middle" fontFamily="DM Mono" fontSize="8" fill="#94786c">酸味</text>
+                <text x="163" y="59" fontFamily="DM Mono" fontSize="8" fill="#94786c">苦味</text>
+                <text x="163" y="89" fontFamily="DM Mono" fontSize="8" fill="#94786c">コク</text>
+                <text x="16" y="82" textAnchor="end" fontFamily="DM Mono" fontSize="8" fill="#94786c">甘み</text>
               </svg>
             </div>
             <div className="w-full bg-line-green/5 border border-line-green/15 rounded-xl p-3 flex items-center gap-3">
