@@ -18,7 +18,7 @@ export default function UserHomePage() {
           メニュー
         </p>
         <Link href="/record" className="btn-primary text-center block">
-          ☕ 来店記録をする
+          ☕ ポイントを追加する
         </Link>
         <Link href="/profile" className="btn-secondary text-center block">
           テイストプロフィール
