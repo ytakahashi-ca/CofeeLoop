@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { TASTE_TAGS, Q1_OPTIONS, Q3_OPTIONS } from '@/types'
+import { TASTE_TAGS, Q1_OPTIONS } from '@/types'
 
 const BEANS = [
   { id: '1', name: 'エチオピア イルガチェフェ', origin: 'エチオピア', roast: '浅煎り', process: 'ナチュラル' },
@@ -10,8 +10,8 @@ const BEANS = [
   { id: '4', name: 'グアテマラ アンティグア',   origin: 'グアテマラ', roast: '中深煎り', process: 'ウォッシュド' },
 ]
 
-type Step = 'qr' | 'line' | 'bean' | 'q1' | 'q2' | 'q3' | 'done'
-const STEPS: Step[] = ['qr', 'line', 'bean', 'q1', 'q2', 'q3', 'done']
+type Step = 'qr' | 'line' | 'bean' | 'q1' | 'q2' | 'done'
+const STEPS: Step[] = ['qr', 'line', 'bean', 'q1', 'q2', 'done']
 
 export default function RecordPage() {
   const router = useRouter()
@@ -19,8 +19,6 @@ export default function RecordPage() {
   const [selectedBean, setSelectedBean] = useState<string | null>(null)
   const [q1, setQ1] = useState<string | null>(null)
   const [q2, setQ2] = useState<string[]>([])
-  const [q3, setQ3] = useState<string | null>(null)
-
   const stepIndex = STEPS.indexOf(step)
   const totalSteps = STEPS.length - 1
 
@@ -47,10 +45,10 @@ export default function RecordPage() {
             ← 戻る
           </button>
           <span className="font-mono text-xs text-text-muted uppercase tracking-widest">
-            {step === 'qr' ? 'ポイント追加' : step === 'line' ? 'LINE連携' : step === 'bean' ? '本日のメニュー' : `${['q1','q2','q3'].indexOf(step) + 1} / 3`}
+            {step === 'qr' ? 'ポイント追加' : step === 'line' ? 'LINE連携' : step === 'bean' ? '本日のメニュー' : `${['q1','q2'].indexOf(step) + 1} / 2`}
           </span>
-          {['q1', 'q2', 'q3'].includes(step) ? (
-            <button onClick={() => next(step === 'q1' ? 'q2' : step === 'q2' ? 'q3' : 'done')} className="font-mono text-xs text-text-muted">
+          {['q1', 'q2'].includes(step) ? (
+            <button onClick={() => next(step === 'q1' ? 'q2' : 'done')} className="font-mono text-xs text-text-muted">
               スキップ
             </button>
           ) : <div className="w-10" />}
@@ -241,48 +239,9 @@ export default function RecordPage() {
               ))}
             </div>
             <p className="font-mono text-xs text-text-muted">※ 1〜2個まで選べます</p>
-            <button onClick={() => next('q3')} className="btn-primary mt-auto">
-              次へ →
-            </button>
-          </div>
-        )}
-
-        {/* S6: Q3 */}
-        {step === 'q3' && (
-          <div className="flex flex-col gap-4">
-            <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-lg px-3 py-1 self-start">
-              <span className="text-xs">☕</span>
-              <span className="font-mono text-xs text-accent">{beanName}</span>
-            </div>
-            <div>
-              <p className="font-mono text-xs text-accent uppercase tracking-widest mb-2">Q3</p>
-              <h2 className="font-serif text-2xl font-semibold text-text leading-snug">
-                次はどうしたい？
-              </h2>
-            </div>
-            <div className="flex flex-col gap-3">
-              {Q3_OPTIONS.map(opt => (
-                <button
-                  key={opt.id}
-                  onClick={() => setQ3(opt.id)}
-                  className={`option-btn ${q3 === opt.id ? 'selected' : ''}`}
-                >
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                    q3 === opt.id ? 'bg-accent border-accent' : 'border-border'
-                  }`}>
-                    {q3 === opt.id && <div className="w-2 h-2 bg-bg rounded-full" />}
-                  </div>
-                  <div className="flex-1 text-left">
-                    <p className={`text-sm ${q3 === opt.id ? 'text-text' : 'text-text-sub'}`}>{opt.label}</p>
-                    <p className="font-mono text-xs text-text-muted mt-0.5">{opt.hint}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-            <button onClick={() => next('done')} className={`btn-primary mt-auto ${!q3 ? 'opacity-40' : ''}`} disabled={!q3}>
+            <button onClick={() => next('done')} className="btn-primary mt-auto">
               保存して完了
             </button>
-            <button onClick={() => next('done')} className="btn-secondary">スキップ</button>
           </div>
         )}
 
