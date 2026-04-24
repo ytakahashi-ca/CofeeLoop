@@ -10,17 +10,16 @@ const BEANS = [
   { id: '4', name: 'グアテマラ アンティグア',   origin: 'グアテマラ', roast: '中深煎り', process: 'ウォッシュド' },
 ]
 
-type Step = 'qr' | 'line' | 'bean' | 'q1' | 'q2' | 'done'
-const STEPS: Step[] = ['qr', 'line', 'bean', 'q1', 'q2', 'done']
+type Step = 'bean' | 'q1' | 'q2' | 'done'
+const STEPS: Step[] = ['bean', 'q1', 'q2', 'done']
 
 export default function RecordPage() {
   const router = useRouter()
-  const [step, setStep] = useState<Step>('qr')
+  const [step, setStep] = useState<Step>('bean')
   const [selectedBean, setSelectedBean] = useState<string | null>(null)
   const [q1, setQ1] = useState<string | null>(null)
   const [q2, setQ2] = useState<string[]>([])
   const stepIndex = STEPS.indexOf(step)
-  const totalSteps = STEPS.length - 1
 
   const next = (nextStep: Step) => setStep(nextStep)
 
@@ -45,7 +44,7 @@ export default function RecordPage() {
             ← 戻る
           </button>
           <span className="font-mono text-xs text-text-muted uppercase tracking-widest">
-            {step === 'qr' ? 'ポイント追加' : step === 'line' ? 'LINE連携' : step === 'bean' ? '本日のメニュー' : `${['q1','q2'].indexOf(step) + 1} / 2`}
+            {step === 'bean' ? '本日のメニュー' : `${['q1','q2'].indexOf(step) + 1} / 2`}
           </span>
           {['q1', 'q2'].includes(step) ? (
             <button onClick={() => next(step === 'q1' ? 'q2' : 'done')} className="font-mono text-xs text-text-muted">
@@ -68,65 +67,7 @@ export default function RecordPage() {
 
       <div className="flex-1 px-5 pb-8">
 
-        {/* S1: QR */}
-        {step === 'qr' && (
-          <div className="flex flex-col items-center justify-center h-full gap-8 pt-8">
-            <div className="relative w-44 h-44 border-2 border-accent rounded-2xl flex items-center justify-center bg-surface2">
-              <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-accent2 rounded-tl-lg -translate-x-0.5 -translate-y-0.5" />
-              <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-accent2 rounded-tr-lg translate-x-0.5 -translate-y-0.5" />
-              <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-accent2 rounded-bl-lg -translate-x-0.5 translate-y-0.5" />
-              <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-accent2 rounded-br-lg translate-x-0.5 translate-y-0.5" />
-              <span className="text-5xl">📷</span>
-            </div>
-            <div className="text-center">
-              <h2 className="font-serif text-xl text-text mb-2">店のQRをスキャン</h2>
-              <p className="font-mono text-xs text-text-muted leading-relaxed">
-                レジ横のコードを読み取ってください<br />来店が自動で記録されます
-              </p>
-            </div>
-            <button onClick={() => next('line')} className="btn-primary">
-              スキャン完了（デモ）
-            </button>
-          </div>
-        )}
-
-        {/* S2: LINE */}
-        {step === 'line' && (
-          <div className="flex flex-col items-center gap-4 pt-4">
-            <div className="inline-flex items-center gap-1 bg-line-green/10 border border-line-green/20 rounded-full px-3 py-1 font-mono text-xs text-line-green tracking-widest">
-              初回のみ
-            </div>
-            <div className="w-16 h-16 bg-line-green rounded-2xl flex items-center justify-center text-3xl shadow-lg">
-              💬
-            </div>
-            <div className="text-center">
-              <h2 className="font-serif text-xl text-text mb-2">LINEで通知を<br />受け取りませんか？</h2>
-              <p className="font-mono text-xs text-text-muted leading-relaxed">
-                好みに合う新豆や来店タイミングを<br />お知らせします
-              </p>
-            </div>
-            <div className="w-full bg-surface2 border border-border rounded-2xl p-4 flex flex-col gap-3">
-              {[
-                { icon: '🫘', text: '好みに合う豆が入ったらお知らせ' },
-                { icon: '☕', text: '「そろそろコーヒー飲みたい頃では？」' },
-                { icon: '🎁', text: 'スタンプ達成時に特典のご案内' },
-              ].map(item => (
-                <div key={item.text} className="flex items-center gap-3 text-sm text-text-sub">
-                  <span>{item.icon}</span>
-                  <span>{item.text}</span>
-                </div>
-              ))}
-            </div>
-            <button onClick={() => next('bean')} className="w-full bg-line-green text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 text-sm">
-              💬 LINEで友だち追加
-            </button>
-            <button onClick={() => next('bean')} className="font-mono text-xs text-text-muted py-2 tracking-widest">
-              今はスキップ →
-            </button>
-          </div>
-        )}
-
-        {/* S3: 豆選択 */}
+        {/* 豆選択 */}
         {step === 'bean' && (
           <div className="flex flex-col gap-4">
             <div>
@@ -177,7 +118,7 @@ export default function RecordPage() {
           </div>
         )}
 
-        {/* S4: Q1 */}
+        {/* Q1 */}
         {step === 'q1' && (
           <div className="flex flex-col gap-4">
             <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-lg px-3 py-1 self-start">
@@ -214,7 +155,7 @@ export default function RecordPage() {
           </div>
         )}
 
-        {/* S5: Q2 */}
+        {/* Q2 */}
         {step === 'q2' && (
           <div className="flex flex-col gap-4">
             <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-lg px-3 py-1 self-start">
@@ -245,7 +186,7 @@ export default function RecordPage() {
           </div>
         )}
 
-        {/* S7: 完了 */}
+        {/* 完了 */}
         {step === 'done' && (
           <div className="flex flex-col items-center justify-center min-h-screen gap-5 text-center pb-8">
             <div className="w-16 h-16 bg-green/10 border border-green rounded-full flex items-center justify-center text-2xl">

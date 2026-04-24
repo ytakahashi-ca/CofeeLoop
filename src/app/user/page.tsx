@@ -23,6 +23,9 @@ export default function UserHomePage() {
         <Link href="/profile" className="btn-secondary text-center block">
           テイストプロフィール
         </Link>
+        <Link href="/register" className="btn-secondary text-center block">
+          新規登録
+        </Link>
       </div>
 
       {/* 戻るリンク */}
