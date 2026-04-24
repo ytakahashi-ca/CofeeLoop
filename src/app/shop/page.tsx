@@ -9,6 +9,13 @@ const BEANS = [
   { name: 'グアテマラ アンティグア',   detail: 'ウォッシュド / グアテマラ', roast: '中深煎り', orders: 1, icon: '🌙' },
 ]
 
+const MOCK_CUSTOMERS: Record<string, { name: string; tags: string[]; stamps: number }> = {
+  '1234': { name: '田中 さくら', tags: ['🍊 フルーティ', '✨ すっきり'], stamps: 7 },
+  '5678': { name: '鈴木 けんた', tags: ['🍫 チョコっぽい', '💧 コクがある'], stamps: 3 },
+  '9012': { name: '佐藤 みほ',   tags: ['🌰 ナッツっぽい'], stamps: 12 },
+  '3456': { name: '山田 たろう', tags: ['🍊 フルーティ', '🌰 ナッツっぽい'], stamps: 2 },
+}
+
 const BEAN_CHART: Record<string, { name: string; orders: number; pct: number }[]> = {
   day: [
     { name: 'エチオピア イルガチェフェ', orders: 7, pct: 100 },
@@ -56,9 +63,27 @@ const CATEGORY_CHART: Record<string, { name: string; count: number; pct: number 
 
 const PERIOD_LABELS: Record<string, string> = { day: '日別', week: '週別', month: '月別' }
 const UNIT: Record<string, string> = { day: '杯', week: '杯', month: '杯' }
+const REGISTER_URL = 'https://cofeeloop.app/register'
 
 export default function ShopPage() {
   const [period, setPeriod] = useState<'day' | 'week' | 'month'>('day')
+  const [searchCode, setSearchCode] = useState('')
+  const [searchResult, setSearchResult] = useState<{ name: string; tags: string[]; stamps: number } | null | undefined>(undefined)
+  const [actionDone, setActionDone] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  const handleSearch = () => {
+    const result = MOCK_CUSTOMERS[searchCode.trim()]
+    setSearchResult(result ?? null)
+    setActionDone(null)
+  }
+
+  const handleCopyUrl = () => {
+    navigator.clipboard.writeText(REGISTER_URL).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-[#141a16] pb-24">
@@ -72,6 +97,107 @@ export default function ShopPage() {
       </div>
 
       <div className="flex flex-col gap-4 px-5 pt-4">
+
+        {/* 顧客番号検索 */}
+        <div>
+          <p className="font-mono text-xs text-[#5e8070] uppercase tracking-widest mb-2">顧客番号で検索</p>
+          <div className="bg-[#232e28] border border-[#364a40] rounded-2xl p-4">
+            <div className="flex gap-2 mb-3">
+              <input
+                type="tel"
+                inputMode="numeric"
+                maxLength={4}
+                value={searchCode}
+                onChange={e => {
+                  setSearchCode(e.target.value.replace(/\D/g, ''))
+                  setSearchResult(undefined)
+                  setActionDone(null)
+                }}
+                placeholder="4桁の番号"
+                className="flex-1 bg-[#1c2420] border border-[#364a40] rounded-xl px-4 py-3 font-mono text-lg text-[#eaf4f0] placeholder:text-[#3c5448] tracking-widest focus:outline-none focus:border-[#80c4a0] transition-colors text-center"
+              />
+              <button
+                onClick={handleSearch}
+                disabled={searchCode.length !== 4}
+                className={`px-5 py-3 rounded-xl font-mono text-xs uppercase tracking-widest transition-all ${
+                  searchCode.length === 4
+                    ? 'bg-[#80c4a0] text-[#0e1210]'
+                    : 'bg-[#2c3c34] text-[#3c5448] border border-[#364a40]'
+                }`}
+              >
+                検索
+              </button>
+            </div>
+
+            {/* 検索結果 */}
+            {searchResult === null && (
+              <div className="bg-[#1c2420] border border-[#364a40] rounded-xl p-3 text-center">
+                <p className="font-mono text-xs text-[#5e8070]">番号 {searchCode} の顧客が見つかりません</p>
+              </div>
+            )}
+
+            {searchResult && (
+              <div className="flex flex-col gap-3">
+                <div className="bg-[#1c2420] border border-[#80c4a0]/30 rounded-xl p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-[#2c3c34] border border-[#364a40] rounded-full flex items-center justify-center font-mono text-sm text-[#80c4a0] flex-shrink-0">
+                      {searchResult.name.slice(-1)}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-[#eaf4f0] font-medium">{searchResult.name}</p>
+                      <p className="font-mono text-xs text-[#5e8070]">番号 {searchCode}</p>
+                    </div>
+                    <div className="flex items-center gap-1.5 bg-[#e0c040]/10 border border-[#e0c040]/20 rounded-lg px-2.5 py-1.5">
+                      <span className="text-sm">☕</span>
+                      <span className="font-mono text-xs text-[#e0c040]">{searchResult.stamps}スタンプ</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {searchResult.tags.map(tag => (
+                      <span key={tag} className="font-mono text-xs text-[#5e8070] bg-[#2c3c34] border border-[#364a40] px-2 py-0.5 rounded">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {actionDone ? (
+                  <div className="bg-[#80c4a0]/10 border border-[#80c4a0]/30 rounded-xl p-3 text-center">
+                    <p className="font-mono text-xs text-[#80c4a0]">✓ {actionDone}</p>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setActionDone('来店記録＋スタンプを付与しました')}
+                      className="flex-1 bg-[#80c4a0] text-[#0e1210] font-mono text-xs py-3 rounded-xl uppercase tracking-wide"
+                    >
+                      来店記録＋スタンプ付与
+                    </button>
+                    <button
+                      onClick={() => setActionDone('来店を記録しました')}
+                      className="flex-1 bg-[#2c3c34] text-[#80c4a0] border border-[#6ab08a]/40 font-mono text-xs py-3 rounded-xl uppercase tracking-wide"
+                    >
+                      記録のみ
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 登録URL */}
+        <button
+          onClick={handleCopyUrl}
+          className={`flex items-center justify-center gap-2 w-full border rounded-xl py-3 font-mono text-xs uppercase tracking-widest transition-all ${
+            copied
+              ? 'bg-[#80c4a0]/10 border-[#80c4a0] text-[#80c4a0]'
+              : 'bg-[#232e28] border-[#364a40] text-[#5e8070]'
+          }`}
+        >
+          <span>{copied ? '✓' : '🔗'}</span>
+          {copied ? 'コピーしました' : '登録URLをコピー'}
+        </button>
 
         {/* 本日の状況 */}
         <div>
