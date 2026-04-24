@@ -80,71 +80,6 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* レーダーチャート */}
-        <div className="card">
-          <div className="flex justify-between items-center mb-4">
-            <p className="font-mono text-xs text-text-muted uppercase tracking-widest">テイストプロフィール</p>
-            <span className="font-mono text-xs text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded-full">18杯記録</span>
-          </div>
-          <div className="flex justify-center mb-4">
-            <svg viewBox="0 0 180 180" className="w-44 h-44">
-              <polygon points="90,15 155,52.5 155,127.5 90,165 25,127.5 25,52.5" fill="none" stroke="#524038" strokeWidth="1"/>
-              <polygon points="90,37 132,60 132,120 90,143 48,120 48,60" fill="none" stroke="#524038" strokeWidth="0.6"/>
-              <polygon points="90,59 109,70 109,110 90,121 71,110 71,70" fill="none" stroke="#524038" strokeWidth="0.4"/>
-              <line x1="90" y1="15" x2="90" y2="165" stroke="#524038" strokeWidth="0.5"/>
-              <line x1="25" y1="52.5" x2="155" y2="127.5" stroke="#524038" strokeWidth="0.5"/>
-              <line x1="25" y1="127.5" x2="155" y2="52.5" stroke="#524038" strokeWidth="0.5"/>
-              <polygon points="90,22 140,72 100,138 50,105" fill="#e8a878" fillOpacity="0.18" stroke="#e8a878" strokeWidth="2"/>
-              <circle cx="90" cy="22" r="4" fill="#e8a878"/>
-              <circle cx="140" cy="72" r="4" fill="#e8a878"/>
-              <circle cx="100" cy="138" r="4" fill="#e8a878"/>
-              <circle cx="50" cy="105" r="4" fill="#e8a878"/>
-              <text x="90" y="10" textAnchor="middle" fontFamily="DM Mono" fontSize="10" fill="#c0a898">酸味</text>
-              <text x="162" y="76" fontFamily="DM Mono" fontSize="10" fill="#c0a898">苦味</text>
-              <text x="162" y="132" fontFamily="DM Mono" fontSize="10" fill="#c0a898">コク</text>
-              <text x="18" y="110" textAnchor="end" fontFamily="DM Mono" fontSize="10" fill="#c0a898">甘み</text>
-            </svg>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { name: '酸味', val: '82%', opacity: 1 },
-              { name: '苦味', val: '44%', opacity: 0.5 },
-              { name: 'コク', val: '60%', opacity: 0.7 },
-              { name: '甘み', val: '38%', opacity: 0.4 },
-            ].map(axis => (
-              <div key={axis.name} className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-sm bg-accent flex-shrink-0" style={{ opacity: axis.opacity }} />
-                <span className="font-mono text-xs text-text-muted flex-1">{axis.name}</span>
-                <span className="font-mono text-xs text-accent">{axis.val}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* タグランキング */}
-        <div className="card">
-          <div className="flex justify-between items-center mb-4">
-            <p className="font-mono text-xs text-text-muted uppercase tracking-widest">よく選ぶ味タグ</p>
-            <span className="font-mono text-xs text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded-full">TOP 3</span>
-          </div>
-          <div className="flex flex-col gap-3">
-            {[
-              { rank: '01', name: '🍊 フルーティ', count: '11回', pct: 88 },
-              { rank: '02', name: '✨ すっきり',   count: '7回',  pct: 56 },
-              { rank: '03', name: '🌰 ナッツっぽい', count: '4回', pct: 32 },
-            ].map(tag => (
-              <div key={tag.rank} className="flex items-center gap-2">
-                <span className="font-mono text-xs text-text-muted w-5">{tag.rank}</span>
-                <span className="text-sm text-text-sub w-28">{tag.name}</span>
-                <div className="flex-1 bg-surface3 h-1 rounded overflow-hidden">
-                  <div className="h-full bg-accent rounded" style={{ width: `${tag.pct}%`, opacity: 0.7 }} />
-                </div>
-                <span className="font-mono text-xs text-text-muted w-8 text-right">{tag.count}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* 豆の履歴 */}
         <div className="card">
           <div className="flex justify-between items-center mb-4">
@@ -181,7 +116,7 @@ export default function ProfilePage() {
         {[
           { href: '/', icon: '🏠', label: 'ホーム', active: false },
           { href: '/profile', icon: '☕', label: 'プロフィール', active: true },
-          { href: '#', icon: '🔔', label: '通知', active: false },
+          { href: '/notifications', icon: '🔔', label: '通知', active: false },
           { href: '#', icon: '⚙', label: '設定', active: false },
         ].map(tab => (
           <Link key={tab.label} href={tab.href} className="flex-1 flex flex-col items-center gap-0.5">
