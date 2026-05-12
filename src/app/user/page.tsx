@@ -12,15 +12,6 @@ export default function UserHomePage() {
         </p>
       </div>
 
-      {/* 4桁番号 */}
-      <div className="w-full bg-surface2 border border-border rounded-2xl p-5 text-center flex flex-col gap-2">
-        <p className="font-mono text-xs text-text-muted uppercase tracking-widest">あなたの番号</p>
-        <p className="font-serif text-5xl font-bold text-accent tracking-[0.3em]">1234</p>
-        <p className="font-mono text-xs text-text-muted leading-relaxed">
-          来店時にバリスタへこの番号を伝えてください
-        </p>
-      </div>
-
       {/* ユーザーメニュー */}
       <div className="w-full flex flex-col gap-3">
         <Link href="/profile" className="btn-primary text-center block">

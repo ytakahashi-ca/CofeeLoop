@@ -18,6 +18,15 @@ export default function ProfilePage() {
 
       <div className="flex flex-col gap-4 px-5">
 
+        {/* あなたの番号 */}
+        <div className="bg-surface2 border border-border rounded-2xl px-5 py-4 flex items-center justify-between">
+          <div>
+            <p className="font-mono text-xs text-text-muted uppercase tracking-widest mb-1">あなたの番号</p>
+            <p className="font-mono text-xs text-text-muted leading-relaxed">来店時にバリスタへ伝えてください</p>
+          </div>
+          <p className="font-serif text-4xl font-bold text-accent tracking-[0.2em]">1234</p>
+        </div>
+
         {/* 一言サマリー */}
         <div className="bg-gradient-to-br from-surface2 to-surface3 border border-border rounded-2xl p-4 flex items-center gap-3">
           <span className="text-3xl">☕</span>
