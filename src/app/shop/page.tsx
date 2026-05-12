@@ -3,10 +3,10 @@ import Link from 'next/link'
 import { useState } from 'react'
 
 const BEANS = [
-  { id: '1', name: 'エチオピア イルガチェフェ', detail: 'ナチュラル / エチオピア', roast: '浅煎り', orders: 7, icon: '🌱' },
-  { id: '2', name: 'ケニア AA',               detail: 'ウォッシュド / ケニア',    roast: '中煎り', orders: 4, icon: '☕' },
-  { id: '3', name: 'コロンビア ナリーニョ',     detail: 'ハニー / コロンビア',     roast: '浅煎り', orders: 2, icon: '🍂' },
-  { id: '4', name: 'グアテマラ アンティグア',   detail: 'ウォッシュド / グアテマラ', roast: '中深煎り', orders: 1, icon: '🌙' },
+  { id: '1', name: 'エチオピア イルガチェフェ', detail: 'ナチュラル / エチオピア', roast: '浅煎り', orders: 7, img: '/beans/ethiopia.png' },
+  { id: '2', name: 'ケニア AA',               detail: 'ウォッシュド / ケニア',    roast: '中煎り', orders: 4, img: '/beans/kenya.png' },
+  { id: '3', name: 'コロンビア ナリーニョ',     detail: 'ハニー / コロンビア',     roast: '浅煎り', orders: 2, img: '/beans/colombia.png' },
+  { id: '4', name: 'グアテマラ アンティグア',   detail: 'ウォッシュド / グアテマラ', roast: '中深煎り', orders: 1, img: '/beans/guatemala.png' },
 ]
 
 const MOCK_CUSTOMERS: Record<string, { name: string; tags: string[]; stamps: number }> = {
@@ -284,8 +284,8 @@ export default function ShopPage() {
             </div>
             {BEANS.map((bean, i) => (
               <div key={i} className={`flex items-center gap-3 px-4 py-3 ${i < BEANS.length - 1 ? 'border-b border-[#364a40]' : ''}`}>
-                <div className="w-8 h-8 bg-[#2c3c34] border border-[#364a40] rounded-xl flex items-center justify-center text-base flex-shrink-0">
-                  {bean.icon}
+                <div className="w-10 h-10 rounded-xl overflow-hidden border border-[#364a40] flex-shrink-0">
+                  <img src={bean.img} alt={bean.name} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm text-[#eaf4f0]">{bean.name}</p>

@@ -1,0 +1,26 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "80NRmt8LV9_OctGKj80ZP"
+uri = "file://public/beans/ethiopia.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "TvOEUyqub60cEg1LUK_BA"
+uri = "file://public/beans/kenya.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "X7KfcNAf0XuOTpuutCfUc"
+uri = "file://public/beans/colombia.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "2rBujT2KhFXs9XrMwHrQu"
+uri = "file://public/beans/guatemala.png"
+type = "image"
+title = "generated_image"
