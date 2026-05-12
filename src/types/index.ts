@@ -51,7 +51,6 @@ export type Stamp = {
   user_id: string
   shop_id: string
   count: number       // 購入スタンプ
-  bonus_count: number // 記録ボーナス
   updated_at: string
 }
 

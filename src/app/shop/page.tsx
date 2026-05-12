@@ -1,12 +1,13 @@
 'use client'
 import Link from 'next/link'
 import { useState } from 'react'
+import { TASTE_TAGS, Q1_OPTIONS, Q3_OPTIONS } from '@/types'
 
 const BEANS = [
-  { name: 'エチオピア イルガチェフェ', detail: 'ナチュラル / エチオピア', roast: '浅煎り', orders: 7, icon: '🌱' },
-  { name: 'ケニア AA',               detail: 'ウォッシュド / ケニア',    roast: '中煎り', orders: 4, icon: '☕' },
-  { name: 'コロンビア ナリーニョ',     detail: 'ハニー / コロンビア',     roast: '浅煎り', orders: 2, icon: '🍂' },
-  { name: 'グアテマラ アンティグア',   detail: 'ウォッシュド / グアテマラ', roast: '中深煎り', orders: 1, icon: '🌙' },
+  { id: '1', name: 'エチオピア イルガチェフェ', detail: 'ナチュラル / エチオピア', roast: '浅煎り', orders: 7, icon: '🌱' },
+  { id: '2', name: 'ケニア AA',               detail: 'ウォッシュド / ケニア',    roast: '中煎り', orders: 4, icon: '☕' },
+  { id: '3', name: 'コロンビア ナリーニョ',     detail: 'ハニー / コロンビア',     roast: '浅煎り', orders: 2, icon: '🍂' },
+  { id: '4', name: 'グアテマラ アンティグア',   detail: 'ウォッシュド / グアテマラ', roast: '中深煎り', orders: 1, icon: '🌙' },
 ]
 
 const MOCK_CUSTOMERS: Record<string, { name: string; tags: string[]; stamps: number }> = {
@@ -65,17 +66,28 @@ const PERIOD_LABELS: Record<string, string> = { day: '日別', week: '週別', m
 const UNIT: Record<string, string> = { day: '杯', week: '杯', month: '杯' }
 const REGISTER_URL = 'https://cofeeloop.app/register'
 
+type RecordStep = 'idle' | 'bean' | 'q1' | 'q2' | 'q3' | 'done'
+
 export default function ShopPage() {
   const [period, setPeriod] = useState<'day' | 'week' | 'month'>('day')
   const [searchCode, setSearchCode] = useState('')
   const [searchResult, setSearchResult] = useState<{ name: string; tags: string[]; stamps: number } | null | undefined>(undefined)
-  const [actionDone, setActionDone] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+
+  const [recordStep, setRecordStep] = useState<RecordStep>('idle')
+  const [selectedBean, setSelectedBean] = useState<string | null>(null)
+  const [q1, setQ1] = useState<string | null>(null)
+  const [q2, setQ2] = useState<string[]>([])
+  const [q3, setQ3] = useState<string | null>(null)
 
   const handleSearch = () => {
     const result = MOCK_CUSTOMERS[searchCode.trim()]
     setSearchResult(result ?? null)
-    setActionDone(null)
+    setRecordStep('idle')
+    setSelectedBean(null)
+    setQ1(null)
+    setQ2([])
+    setQ3(null)
   }
 
   const handleCopyUrl = () => {
@@ -84,6 +96,26 @@ export default function ShopPage() {
       setTimeout(() => setCopied(false), 2000)
     })
   }
+
+  const toggleQ2 = (id: string) => {
+    if (q2.includes(id)) {
+      setQ2(q2.filter(t => t !== id))
+    } else if (q2.length < 2) {
+      setQ2([...q2, id])
+    } else {
+      setQ2([q2[1], id])
+    }
+  }
+
+  const resetRecord = () => {
+    setRecordStep('idle')
+    setSelectedBean(null)
+    setQ1(null)
+    setQ2([])
+    setQ3(null)
+  }
+
+  const beanName = BEANS.find(b => b.id === selectedBean)?.name ?? ''
 
   return (
     <div className="flex flex-col min-h-screen bg-[#141a16] pb-24">
@@ -111,7 +143,7 @@ export default function ShopPage() {
                 onChange={e => {
                   setSearchCode(e.target.value.replace(/\D/g, ''))
                   setSearchResult(undefined)
-                  setActionDone(null)
+                  resetRecord()
                 }}
                 placeholder="4桁の番号"
                 className="flex-1 bg-[#1c2420] border border-[#364a40] rounded-xl px-4 py-3 font-mono text-lg text-[#eaf4f0] placeholder:text-[#3c5448] tracking-widest focus:outline-none focus:border-[#80c4a0] transition-colors text-center"
@@ -138,6 +170,7 @@ export default function ShopPage() {
 
             {searchResult && (
               <div className="flex flex-col gap-3">
+                {/* 顧客カード */}
                 <div className="bg-[#1c2420] border border-[#80c4a0]/30 rounded-xl p-4">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 bg-[#2c3c34] border border-[#364a40] rounded-full flex items-center justify-center font-mono text-sm text-[#80c4a0] flex-shrink-0">
@@ -161,23 +194,187 @@ export default function ShopPage() {
                   </div>
                 </div>
 
-                {actionDone ? (
-                  <div className="bg-[#80c4a0]/10 border border-[#80c4a0]/30 rounded-xl p-3 text-center">
-                    <p className="font-mono text-xs text-[#80c4a0]">✓ {actionDone}</p>
-                  </div>
-                ) : (
-                  <div className="flex gap-2">
+                {/* 記録フロー */}
+                {recordStep === 'idle' && (
+                  <button
+                    onClick={() => setRecordStep('bean')}
+                    className="w-full bg-[#80c4a0] text-[#0e1210] font-mono text-xs py-3 rounded-xl uppercase tracking-wide"
+                  >
+                    来店記録＋スタンプ付与を開始 →
+                  </button>
+                )}
+
+                {/* STEP: 豆選択 */}
+                {recordStep === 'bean' && (
+                  <div className="bg-[#1c2420] border border-[#364a40] rounded-xl p-4 flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <p className="font-mono text-xs text-[#80c4a0] uppercase tracking-widest">本日の豆を選択</p>
+                      <button onClick={resetRecord} className="font-mono text-xs text-[#5e8070]">キャンセル</button>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      {BEANS.map(bean => (
+                        <button
+                          key={bean.id}
+                          onClick={() => setSelectedBean(bean.id)}
+                          className={`flex items-center gap-3 border rounded-xl p-3 text-left transition-all ${
+                            selectedBean === bean.id
+                              ? 'bg-[#80c4a0]/10 border-[#80c4a0]'
+                              : 'bg-[#232e28] border-[#364a40]'
+                          }`}
+                        >
+                          <span className="text-base">{bean.icon}</span>
+                          <div className="flex-1">
+                            <p className={`text-xs ${selectedBean === bean.id ? 'text-[#80c4a0]' : 'text-[#eaf4f0]'}`}>{bean.name}</p>
+                            <p className="font-mono text-xs text-[#5e8070]">{bean.detail}</p>
+                          </div>
+                          <span className="font-mono text-xs text-[#5e8070] bg-[#2c3c34] border border-[#364a40] px-2 py-0.5 rounded">{bean.roast}</span>
+                        </button>
+                      ))}
+                    </div>
                     <button
-                      onClick={() => setActionDone('来店記録＋スタンプを付与しました')}
-                      className="flex-1 bg-[#80c4a0] text-[#0e1210] font-mono text-xs py-3 rounded-xl uppercase tracking-wide"
+                      onClick={() => selectedBean && setRecordStep('q1')}
+                      disabled={!selectedBean}
+                      className={`w-full font-mono text-xs py-3 rounded-xl uppercase tracking-wide transition-all ${
+                        selectedBean ? 'bg-[#80c4a0] text-[#0e1210]' : 'bg-[#2c3c34] text-[#3c5448] border border-[#364a40]'
+                      }`}
                     >
-                      来店記録＋スタンプ付与
+                      次へ →
                     </button>
+                  </div>
+                )}
+
+                {/* STEP: Q1 */}
+                {recordStep === 'q1' && (
+                  <div className="bg-[#1c2420] border border-[#364a40] rounded-xl p-4 flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-mono text-xs text-[#80c4a0] uppercase tracking-widest">Q1 / 3</p>
+                        <p className="text-sm text-[#eaf4f0] mt-1">この一杯、どうでした？</p>
+                      </div>
+                      <button onClick={() => setRecordStep('q2')} className="font-mono text-xs text-[#5e8070]">スキップ</button>
+                    </div>
+                    <div className="inline-flex items-center gap-2 bg-[#80c4a0]/10 border border-[#80c4a0]/20 rounded-lg px-3 py-1 self-start">
+                      <span className="text-xs">☕</span>
+                      <span className="font-mono text-xs text-[#80c4a0]">{beanName}</span>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      {Q1_OPTIONS.map(opt => (
+                        <button
+                          key={opt.id}
+                          onClick={() => setQ1(opt.id)}
+                          className={`flex items-center gap-3 border rounded-xl px-4 py-3 text-left transition-all ${
+                            q1 === opt.id
+                              ? 'bg-[#80c4a0]/10 border-[#80c4a0]'
+                              : 'bg-[#232e28] border-[#364a40]'
+                          }`}
+                        >
+                          <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${q1 === opt.id ? 'bg-[#80c4a0] border-[#80c4a0]' : 'border-[#364a40]'}`} />
+                          <span className={`text-sm ${q1 === opt.id ? 'text-[#eaf4f0]' : 'text-[#8caa9a]'}`}>{opt.label}</span>
+                        </button>
+                      ))}
+                    </div>
                     <button
-                      onClick={() => setActionDone('来店を記録しました')}
-                      className="flex-1 bg-[#2c3c34] text-[#80c4a0] border border-[#6ab08a]/40 font-mono text-xs py-3 rounded-xl uppercase tracking-wide"
+                      onClick={() => q1 && setRecordStep('q2')}
+                      disabled={!q1}
+                      className={`w-full font-mono text-xs py-3 rounded-xl uppercase tracking-wide transition-all ${
+                        q1 ? 'bg-[#80c4a0] text-[#0e1210]' : 'bg-[#2c3c34] text-[#3c5448] border border-[#364a40]'
+                      }`}
                     >
-                      記録のみ
+                      次へ →
+                    </button>
+                  </div>
+                )}
+
+                {/* STEP: Q2 */}
+                {recordStep === 'q2' && (
+                  <div className="bg-[#1c2420] border border-[#364a40] rounded-xl p-4 flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-mono text-xs text-[#80c4a0] uppercase tracking-widest">Q2 / 3</p>
+                        <p className="text-sm text-[#eaf4f0] mt-1">どんな感じが近かった？</p>
+                      </div>
+                      <button onClick={() => setRecordStep('q3')} className="font-mono text-xs text-[#5e8070]">スキップ</button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {TASTE_TAGS.map(tag => (
+                        <button
+                          key={tag.id}
+                          onClick={() => toggleQ2(tag.id)}
+                          className={`font-mono text-xs px-3 py-2 rounded-xl border transition-all ${
+                            q2.includes(tag.id)
+                              ? 'bg-[#80c4a0]/15 border-[#80c4a0] text-[#80c4a0]'
+                              : 'bg-[#232e28] border-[#364a40] text-[#5e8070]'
+                          }`}
+                        >
+                          {tag.label}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="font-mono text-xs text-[#5e8070]">※ 1〜2個まで選べます</p>
+                    <button
+                      onClick={() => setRecordStep('q3')}
+                      className="w-full bg-[#80c4a0] text-[#0e1210] font-mono text-xs py-3 rounded-xl uppercase tracking-wide"
+                    >
+                      次へ →
+                    </button>
+                  </div>
+                )}
+
+                {/* STEP: Q3 */}
+                {recordStep === 'q3' && (
+                  <div className="bg-[#1c2420] border border-[#364a40] rounded-xl p-4 flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-mono text-xs text-[#80c4a0] uppercase tracking-widest">Q3 / 3</p>
+                        <p className="text-sm text-[#eaf4f0] mt-1">次はどうしたい？</p>
+                      </div>
+                      <button onClick={() => setRecordStep('done')} className="font-mono text-xs text-[#5e8070]">スキップ</button>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      {Q3_OPTIONS.map(opt => (
+                        <button
+                          key={opt.id}
+                          onClick={() => setQ3(opt.id)}
+                          className={`flex flex-col gap-1 border rounded-xl px-4 py-3 text-left transition-all ${
+                            q3 === opt.id
+                              ? 'bg-[#80c4a0]/10 border-[#80c4a0]'
+                              : 'bg-[#232e28] border-[#364a40]'
+                          }`}
+                        >
+                          <span className={`text-sm ${q3 === opt.id ? 'text-[#eaf4f0]' : 'text-[#8caa9a]'}`}>{opt.label}</span>
+                          <span className="font-mono text-xs text-[#5e8070]">{opt.hint}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => setRecordStep('done')}
+                      className="w-full bg-[#80c4a0] text-[#0e1210] font-mono text-xs py-3 rounded-xl uppercase tracking-wide"
+                    >
+                      記録完了＋スタンプ付与 →
+                    </button>
+                  </div>
+                )}
+
+                {/* STEP: 完了 */}
+                {recordStep === 'done' && (
+                  <div className="bg-[#80c4a0]/10 border border-[#80c4a0]/30 rounded-xl p-4 flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-base">✓</span>
+                      <p className="font-mono text-xs text-[#80c4a0]">来店記録＋スタンプを付与しました</p>
+                    </div>
+                    <p className="font-mono text-xs text-[#5e8070]">
+                      {beanName}{q1 ? `  /  ${Q1_OPTIONS.find(o => o.id === q1)?.label}` : ''}
+                      {q2.length > 0 ? `  /  ${TASTE_TAGS.filter(t => q2.includes(t.id)).map(t => t.label).join('・')}` : ''}
+                    </p>
+                    <button
+                      onClick={() => {
+                        setSearchResult(undefined)
+                        setSearchCode('')
+                        resetRecord()
+                      }}
+                      className="w-full mt-1 bg-[#2c3c34] text-[#80c4a0] border border-[#6ab08a]/40 font-mono text-xs py-2.5 rounded-xl uppercase tracking-wide"
+                    >
+                      次の顧客へ
                     </button>
                   </div>
                 )}

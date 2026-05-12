@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 const STAMPS = Array.from({ length: 10 }, (_, i) => ({
   id: i,
-  type: i < 6 ? 'purchase' : i === 6 ? 'bonus' : 'empty',
+  type: i < 7 ? 'purchase' : 'empty',
 }))
 
 export default function ProfilePage() {
@@ -46,11 +46,9 @@ export default function ProfilePage() {
               <div key={stamp.id} className={`aspect-square rounded-full flex items-center justify-center text-lg border ${
                 stamp.type === 'purchase'
                   ? 'bg-gradient-to-br from-[#f0cc50] to-[#c08c28] border-[#e0c040] shadow-md'
-                  : stamp.type === 'bonus'
-                  ? 'bg-gradient-to-br from-[#e8a878] to-[#9e5a2c] border-accent'
                   : 'bg-[#301c0c] border-[#6e5030]'
               }`}>
-                {stamp.type === 'purchase' ? '☕' : stamp.type === 'bonus' ? '★' : ''}
+                {stamp.type === 'purchase' ? '☕' : ''}
               </div>
             ))}
           </div>
@@ -72,10 +70,6 @@ export default function ProfilePage() {
             <div className="flex items-center gap-1.5 font-mono text-xs text-[#a08852]">
               <div className="w-2 h-2 rounded-full bg-gradient-to-br from-[#f0cc50] to-[#c08c28]" />
               購入スタンプ
-            </div>
-            <div className="flex items-center gap-1.5 font-mono text-xs text-[#a08852]">
-              <div className="w-2 h-2 rounded-full bg-gradient-to-br from-[#e8a878] to-[#9e5a2c]" />
-              記録ボーナス
             </div>
           </div>
         </div>
