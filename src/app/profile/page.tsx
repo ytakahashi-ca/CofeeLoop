@@ -78,7 +78,12 @@ export default function ProfilePage() {
         <div className="card">
           <div className="flex justify-between items-center mb-4">
             <p className="font-mono text-xs text-text-muted uppercase tracking-widest">飲んだ豆の履歴</p>
-            <span className="font-mono text-xs text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded-full">最新5件</span>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded-full">最新5件</span>
+              <Link href="/record" className="font-mono text-xs text-bg bg-accent px-2.5 py-1 rounded-full">
+                ＋ 追加
+              </Link>
+            </div>
           </div>
           <div className="flex flex-col divide-y divide-border">
             {[
