@@ -268,40 +268,6 @@ export default function ShopPage() {
           </div>
         </div>
 
-        {/* 登録URL */}
-        <button
-          onClick={handleCopyUrl}
-          className={`flex items-center justify-center gap-2 w-full border rounded-xl py-3 font-mono text-xs uppercase tracking-widest transition-all ${
-            copied
-              ? 'bg-[#80c4a0]/10 border-[#80c4a0] text-[#80c4a0]'
-              : 'bg-[#232e28] border-[#364a40] text-[#5e8070]'
-          }`}
-        >
-          <span>{copied ? '✓' : '🔗'}</span>
-          {copied ? 'コピーしました' : '登録URLをコピー'}
-        </button>
-
-        {/* 本日の状況 */}
-        <div>
-          <p className="font-mono text-xs text-[#5e8070] uppercase tracking-widest mb-2">本日の状況</p>
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { val: '18', label: '来店数', alert: false },
-              { val: '14', label: '記録数', alert: false },
-              { val: '4',  label: '要通知', alert: true },
-            ].map(stat => (
-              <div key={stat.label} className={`rounded-2xl p-3 text-center border ${
-                stat.alert
-                  ? 'bg-[#e8a878]/5 border-[#e8a878]'
-                  : 'bg-[#232e28] border-[#364a40]'
-              }`}>
-                <p className={`font-serif text-3xl font-bold ${stat.alert ? 'text-[#e8a878]' : 'text-[#80c4a0]'}`}>{stat.val}</p>
-                <p className="font-mono text-xs text-[#5e8070]">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* 本日のラインナップ */}
         <div>
           <p className="font-mono text-xs text-[#5e8070] uppercase tracking-widest mb-2">本日のラインナップ</p>
