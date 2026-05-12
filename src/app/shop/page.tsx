@@ -65,7 +65,7 @@ const PERIOD_LABELS: Record<string, string> = { day: '日別', week: '週別', m
 const UNIT: Record<string, string> = { day: '杯', week: '杯', month: '杯' }
 const REGISTER_URL = 'https://cofeeloop.app/register'
 
-type RecordStep = 'idle' | 'bean' | 'done'
+type RecordStep = 'idle' | 'stamp' | 'done'
 
 export default function ShopPage() {
   const [period, setPeriod] = useState<'day' | 'week' | 'month'>('day')
@@ -74,14 +74,13 @@ export default function ShopPage() {
   const [copied, setCopied] = useState(false)
 
   const [recordStep, setRecordStep] = useState<RecordStep>('idle')
-  const [selectedBean, setSelectedBean] = useState<string | null>(null)
   const [stampCount, setStampCount] = useState(1)
 
   const handleSearch = () => {
     const result = MOCK_CUSTOMERS[searchCode.trim()]
     setSearchResult(result ?? null)
     setRecordStep('idle')
-    setSelectedBean(null)
+    setStampCount(1)
   }
 
   const handleCopyUrl = () => {
@@ -93,11 +92,8 @@ export default function ShopPage() {
 
   const resetRecord = () => {
     setRecordStep('idle')
-    setSelectedBean(null)
     setStampCount(1)
   }
-
-  const beanName = BEANS.find(b => b.id === selectedBean)?.name ?? ''
 
   return (
     <div className="flex flex-col min-h-screen bg-[#141a16] pb-24">
@@ -176,73 +172,44 @@ export default function ShopPage() {
                   </div>
                 </div>
 
-                {/* 記録フロー */}
+                {/* STEP: idle — 開始ボタン */}
                 {recordStep === 'idle' && (
                   <button
-                    onClick={() => setRecordStep('bean')}
+                    onClick={() => setRecordStep('stamp')}
                     className="w-full bg-[#80c4a0] text-[#0e1210] font-mono text-xs py-3 rounded-xl uppercase tracking-wide"
                   >
-                    来店記録＋スタンプ付与を開始 →
+                    スタンプを付与する →
                   </button>
                 )}
 
-                {/* STEP: 豆選択 + スタンプ数 */}
-                {recordStep === 'bean' && (
+                {/* STEP: スタンプ数選択 */}
+                {recordStep === 'stamp' && (
                   <div className="bg-[#1c2420] border border-[#364a40] rounded-xl p-4 flex flex-col gap-4">
                     <div className="flex items-center justify-between">
-                      <p className="font-mono text-xs text-[#80c4a0] uppercase tracking-widest">本日の豆を選択</p>
+                      <p className="font-mono text-xs text-[#80c4a0] uppercase tracking-widest">付与するスタンプ数</p>
                       <button onClick={resetRecord} className="font-mono text-xs text-[#5e8070]">キャンセル</button>
                     </div>
-                    <div className="flex flex-col gap-2">
-                      {BEANS.map(bean => (
-                        <button
-                          key={bean.id}
-                          onClick={() => setSelectedBean(bean.id)}
-                          className={`flex items-center gap-3 border rounded-xl p-3 text-left transition-all ${
-                            selectedBean === bean.id
-                              ? 'bg-[#80c4a0]/10 border-[#80c4a0]'
-                              : 'bg-[#232e28] border-[#364a40]'
-                          }`}
-                        >
-                          <span className="text-base">{bean.icon}</span>
-                          <div className="flex-1">
-                            <p className={`text-xs ${selectedBean === bean.id ? 'text-[#80c4a0]' : 'text-[#eaf4f0]'}`}>{bean.name}</p>
-                            <p className="font-mono text-xs text-[#5e8070]">{bean.detail}</p>
-                          </div>
-                          <span className="font-mono text-xs text-[#5e8070] bg-[#2c3c34] border border-[#364a40] px-2 py-0.5 rounded">{bean.roast}</span>
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* スタンプ数選択 */}
-                    <div className="border-t border-[#364a40] pt-3">
-                      <p className="font-mono text-xs text-[#80c4a0] uppercase tracking-widest mb-3">付与するスタンプ数</p>
-                      <div className="flex items-center justify-between bg-[#232e28] border border-[#364a40] rounded-xl px-4 py-3">
-                        <button
-                          onClick={() => setStampCount(c => Math.max(1, c - 1))}
-                          className="w-8 h-8 rounded-full bg-[#2c3c34] border border-[#364a40] text-[#80c4a0] font-mono text-lg flex items-center justify-center"
-                        >
-                          −
-                        </button>
-                        <div className="text-center">
-                          <span className="font-serif text-3xl font-bold text-[#80c4a0]">{stampCount}</span>
-                          <span className="font-mono text-xs text-[#5e8070] ml-1">個</span>
-                        </div>
-                        <button
-                          onClick={() => setStampCount(c => Math.min(10, c + 1))}
-                          className="w-8 h-8 rounded-full bg-[#2c3c34] border border-[#364a40] text-[#80c4a0] font-mono text-lg flex items-center justify-center"
-                        >
-                          ＋
-                        </button>
+                    <div className="flex items-center justify-between bg-[#232e28] border border-[#364a40] rounded-xl px-6 py-4">
+                      <button
+                        onClick={() => setStampCount(c => Math.max(1, c - 1))}
+                        className="w-10 h-10 rounded-full bg-[#2c3c34] border border-[#364a40] text-[#80c4a0] font-mono text-xl flex items-center justify-center"
+                      >
+                        −
+                      </button>
+                      <div className="text-center">
+                        <span className="font-serif text-5xl font-bold text-[#80c4a0]">{stampCount}</span>
+                        <span className="font-mono text-sm text-[#5e8070] ml-2">個</span>
                       </div>
+                      <button
+                        onClick={() => setStampCount(c => Math.min(10, c + 1))}
+                        className="w-10 h-10 rounded-full bg-[#2c3c34] border border-[#364a40] text-[#80c4a0] font-mono text-xl flex items-center justify-center"
+                      >
+                        ＋
+                      </button>
                     </div>
-
                     <button
-                      onClick={() => selectedBean && setRecordStep('done')}
-                      disabled={!selectedBean}
-                      className={`w-full font-mono text-xs py-3 rounded-xl uppercase tracking-wide transition-all ${
-                        selectedBean ? 'bg-[#80c4a0] text-[#0e1210]' : 'bg-[#2c3c34] text-[#3c5448] border border-[#364a40]'
-                      }`}
+                      onClick={() => setRecordStep('done')}
+                      className="w-full bg-[#80c4a0] text-[#0e1210] font-mono text-xs py-3 rounded-xl uppercase tracking-wide"
                     >
                       スタンプ {stampCount}個 を付与する →
                     </button>
@@ -256,7 +223,6 @@ export default function ShopPage() {
                       <span className="text-base">✓</span>
                       <p className="font-mono text-xs text-[#80c4a0]">スタンプを {stampCount}個 付与しました</p>
                     </div>
-                    <p className="font-mono text-xs text-[#5e8070]">{beanName}</p>
                     <button
                       onClick={() => {
                         setSearchResult(undefined)
