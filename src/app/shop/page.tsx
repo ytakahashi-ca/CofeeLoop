@@ -76,6 +76,22 @@ export default function ShopPage() {
   const [recordStep, setRecordStep] = useState<RecordStep>('idle')
   const [stampCount, setStampCount] = useState(1)
 
+  const DEFAULT_NEW_BEAN_MSG = '好きそうな豆、入りました。\nエチオピア イルガチェフェ（浅煎り / ナチュラル）が新しく入荷しています。ぜひまた来てください！'
+  const DEFAULT_REMIND_MSG = 'そろそろコーヒー、飲みたくなってませんか？\nお待ちしています。いつでもお気軽にどうぞ☕'
+
+  const [modal, setModal] = useState<'newbean' | 'remind' | null>(null)
+  const [newBeanMsg, setNewBeanMsg] = useState(DEFAULT_NEW_BEAN_MSG)
+  const [remindMsg, setRemindMsg] = useState(DEFAULT_REMIND_MSG)
+  const [sent, setSent] = useState(false)
+
+  const handleSend = () => {
+    setSent(true)
+    setTimeout(() => {
+      setSent(false)
+      setModal(null)
+    }, 1500)
+  }
+
   const handleSearch = () => {
     const result = MOCK_CUSTOMERS[searchCode.trim()]
     setSearchResult(result ?? null)
@@ -311,7 +327,10 @@ export default function ShopPage() {
           </div>
           <p className="text-sm text-[#eaf4f0] mb-1 leading-snug">フルーティ系が好きな顧客に<br />イルガチェフェを通知できます</p>
           <p className="font-mono text-xs text-[#5e8070] mb-3 leading-relaxed">好みタグ「フルーティ」「すっきり」<br />が多い顧客に自動マッチ済み</p>
-          <button className="w-full bg-[#80c4a0] text-[#0e1210] font-mono text-xs uppercase tracking-widest py-3 rounded-xl">
+          <button
+            onClick={() => { setModal('newbean'); setSent(false) }}
+            className="w-full bg-[#80c4a0] text-[#0e1210] font-mono text-xs uppercase tracking-widest py-3 rounded-xl"
+          >
             通知を送る →
           </button>
         </div>
@@ -324,7 +343,10 @@ export default function ShopPage() {
           </div>
           <p className="text-sm text-[#eaf4f0] mb-1 leading-snug">7日以上来店がない<br />顧客がいます</p>
           <p className="font-mono text-xs text-[#5e8070] mb-3 leading-relaxed">最終来店から7日以上経過。<br />再来店を促す通知を送りましょう。</p>
-          <button className="w-full bg-[#e8a878] text-[#0e1210] font-mono text-xs uppercase tracking-widest py-3 rounded-xl">
+          <button
+            onClick={() => { setModal('remind'); setSent(false) }}
+            className="w-full bg-[#e8a878] text-[#0e1210] font-mono text-xs uppercase tracking-widest py-3 rounded-xl"
+          >
             リマインドを送る →
           </button>
         </div>
@@ -400,6 +422,70 @@ export default function ShopPage() {
         </div>
 
       </div>
+
+      {/* モーダル: 新豆マッチ通知 */}
+      {modal === 'newbean' && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60" onClick={() => setModal(null)}>
+          <div className="w-full max-w-sm bg-[#1c2420] border border-[#364a40] rounded-t-3xl p-6 flex flex-col gap-4" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="font-mono text-xs text-[#80c4a0] bg-[#80c4a0]/15 border border-[#6ab08a]/20 px-2 py-0.5 rounded uppercase tracking-widest">新豆マッチ</span>
+                <p className="text-sm text-[#eaf4f0] font-medium mt-2">通知メッセージ</p>
+                <p className="font-mono text-xs text-[#5e8070]">対象 7人 · LINE登録済み</p>
+              </div>
+              <button onClick={() => setModal(null)} className="w-8 h-8 bg-[#232e28] border border-[#364a40] rounded-full flex items-center justify-center text-[#5e8070] text-sm">✕</button>
+            </div>
+            <textarea
+              value={newBeanMsg}
+              onChange={e => setNewBeanMsg(e.target.value)}
+              rows={5}
+              className="w-full bg-[#232e28] border border-[#364a40] rounded-xl px-4 py-3 font-sans text-sm text-[#eaf4f0] leading-relaxed resize-none focus:outline-none focus:border-[#80c4a0] transition-colors"
+            />
+            <p className="font-mono text-xs text-[#5e8070]">※ 内容は自由に編集できます</p>
+            {sent ? (
+              <div className="w-full bg-[#80c4a0]/10 border border-[#80c4a0]/30 rounded-xl py-3 text-center font-mono text-xs text-[#80c4a0]">
+                ✓ 送信しました
+              </div>
+            ) : (
+              <button onClick={handleSend} className="w-full bg-[#80c4a0] text-[#0e1210] font-mono text-xs uppercase tracking-widest py-3 rounded-xl">
+                7人に送信する →
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* モーダル: 未来店リマインド */}
+      {modal === 'remind' && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60" onClick={() => setModal(null)}>
+          <div className="w-full max-w-sm bg-[#1c2420] border border-[#364a40] rounded-t-3xl p-6 flex flex-col gap-4" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="font-mono text-xs text-[#e8a878] bg-[#e8a878]/15 border border-[#e8a878]/20 px-2 py-0.5 rounded uppercase tracking-widest">未来店リマインド</span>
+                <p className="text-sm text-[#eaf4f0] font-medium mt-2">リマインドメッセージ</p>
+                <p className="font-mono text-xs text-[#5e8070]">対象 4人 · LINE登録済み</p>
+              </div>
+              <button onClick={() => setModal(null)} className="w-8 h-8 bg-[#232e28] border border-[#364a40] rounded-full flex items-center justify-center text-[#5e8070] text-sm">✕</button>
+            </div>
+            <textarea
+              value={remindMsg}
+              onChange={e => setRemindMsg(e.target.value)}
+              rows={5}
+              className="w-full bg-[#232e28] border border-[#364a40] rounded-xl px-4 py-3 font-sans text-sm text-[#eaf4f0] leading-relaxed resize-none focus:outline-none focus:border-[#e8a878] transition-colors"
+            />
+            <p className="font-mono text-xs text-[#5e8070]">※ 内容は自由に編集できます</p>
+            {sent ? (
+              <div className="w-full bg-[#e8a878]/10 border border-[#e8a878]/30 rounded-xl py-3 text-center font-mono text-xs text-[#e8a878]">
+                ✓ 送信しました
+              </div>
+            ) : (
+              <button onClick={handleSend} className="w-full bg-[#e8a878] text-[#0e1210] font-mono text-xs uppercase tracking-widest py-3 rounded-xl">
+                4人に送信する →
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* タブバー */}
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm flex border-t border-[#364a40] bg-[#1c2420] pt-2.5 pb-1">
