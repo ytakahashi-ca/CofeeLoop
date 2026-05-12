@@ -3,10 +3,10 @@ import Link from 'next/link'
 import { useState } from 'react'
 
 const BEANS = [
-  { id: '1', name: 'エチオピア イルガチェフェ', detail: 'ナチュラル / エチオピア', roast: '浅煎り', orders: 7, img: '/beans/ethiopia.png' },
-  { id: '2', name: 'ケニア AA',               detail: 'ウォッシュド / ケニア',    roast: '中煎り', orders: 4, img: '/beans/kenya.png' },
-  { id: '3', name: 'コロンビア ナリーニョ',     detail: 'ハニー / コロンビア',     roast: '浅煎り', orders: 2, img: '/beans/colombia.png' },
-  { id: '4', name: 'グアテマラ アンティグア',   detail: 'ウォッシュド / グアテマラ', roast: '中深煎り', orders: 1, img: '/beans/guatemala.png' },
+  { id: '1', name: 'エチオピア イルガチェフェ', detail: 'ナチュラル / エチオピア',  roast: '浅煎り',  orders: 7, img: '/beans/ethiopia.png',  matchTags: ['🍊 フルーティ', '✨ すっきり'],        matchCount: 7 },
+  { id: '2', name: 'ケニア AA',               detail: 'ウォッシュド / ケニア',    roast: '中煎り',  orders: 4, img: '/beans/kenya.png',     matchTags: ['🍫 チョコっぽい', '💧 コクがある'],    matchCount: 4 },
+  { id: '3', name: 'コロンビア ナリーニョ',     detail: 'ハニー / コロンビア',     roast: '浅煎り',  orders: 2, img: '/beans/colombia.png',  matchTags: ['🍊 フルーティ', '🌰 ナッツっぽい'],    matchCount: 5 },
+  { id: '4', name: 'グアテマラ アンティグア',   detail: 'ウォッシュド / グアテマラ', roast: '中深煎り', orders: 1, img: '/beans/guatemala.png', matchTags: ['🍫 チョコっぽい', '🌰 ナッツっぽい'], matchCount: 3 },
 ]
 
 const MOCK_CUSTOMERS: Record<string, { name: string; tags: string[]; stamps: number }> = {
@@ -76,13 +76,25 @@ export default function ShopPage() {
   const [recordStep, setRecordStep] = useState<RecordStep>('idle')
   const [stampCount, setStampCount] = useState(1)
 
-  const DEFAULT_NEW_BEAN_MSG = '好きそうな豆、入りました。\nエチオピア イルガチェフェ（浅煎り / ナチュラル）が新しく入荷しています。ぜひまた来てください！'
   const DEFAULT_REMIND_MSG = 'そろそろコーヒー、飲みたくなってませんか？\nお待ちしています。いつでもお気軽にどうぞ☕'
 
+  const [selectedBeanId, setSelectedBeanId] = useState<string | null>(null)
   const [modal, setModal] = useState<'newbean' | 'remind' | null>(null)
-  const [newBeanMsg, setNewBeanMsg] = useState(DEFAULT_NEW_BEAN_MSG)
+  const [newBeanMsg, setNewBeanMsg] = useState('')
   const [remindMsg, setRemindMsg] = useState(DEFAULT_REMIND_MSG)
   const [sent, setSent] = useState(false)
+
+  const selectedBean = BEANS.find(b => b.id === selectedBeanId) ?? null
+
+  const buildNewBeanMsg = (bean: typeof BEANS[0]) =>
+    `好きそうな豆、入りました。\n${bean.name}（${bean.roast} / ${bean.detail}）が入荷しています。\nぜひまた来てください！`
+
+  const openNewBeanModal = () => {
+    if (!selectedBean) return
+    setNewBeanMsg(buildNewBeanMsg(selectedBean))
+    setSent(false)
+    setModal('newbean')
+  }
 
   const handleSend = () => {
     setSent(true)
@@ -320,18 +332,78 @@ export default function ShopPage() {
         </div>
 
         {/* アクション: 新豆マッチ */}
-        <div className="bg-[#80c4a0]/4 border border-[#6ab08a] rounded-2xl p-4">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-[#80c4a0]/4 border border-[#6ab08a] rounded-2xl p-4 flex flex-col gap-3">
+          <div className="flex items-center justify-between">
             <span className="font-mono text-xs text-[#80c4a0] bg-[#80c4a0]/15 border border-[#6ab08a]/20 px-2 py-0.5 rounded uppercase tracking-widest">新豆マッチ</span>
-            <span className="font-mono text-xs text-[#5e8070]">対象 7人</span>
+            {selectedBean && (
+              <span className="font-mono text-xs text-[#80c4a0]">対象 {selectedBean.matchCount}人</span>
+            )}
           </div>
-          <p className="text-sm text-[#eaf4f0] mb-1 leading-snug">フルーティ系が好きな顧客に<br />イルガチェフェを通知できます</p>
-          <p className="font-mono text-xs text-[#5e8070] mb-3 leading-relaxed">好みタグ「フルーティ」「すっきり」<br />が多い顧客に自動マッチ済み</p>
+
+          {/* STEP 1: 豆を選択 */}
+          <div>
+            <p className="font-mono text-xs text-[#5e8070] uppercase tracking-widest mb-2">① 通知する豆を選択</p>
+            <div className="bg-[#1a2820] border border-[#364a40] rounded-xl overflow-hidden">
+              {BEANS.map((bean, i) => (
+                <button
+                  key={bean.id}
+                  onClick={() => setSelectedBeanId(bean.id === selectedBeanId ? null : bean.id)}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
+                    i < BEANS.length - 1 ? 'border-b border-[#364a40]' : ''
+                  } ${
+                    selectedBeanId === bean.id
+                      ? 'bg-[#80c4a0]/10'
+                      : 'hover:bg-[#232e28]'
+                  }`}
+                >
+                  <div className="w-8 h-8 rounded-lg overflow-hidden border border-[#364a40] flex-shrink-0">
+                    <img src={bean.img} alt={bean.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-[#eaf4f0] truncate">{bean.name}</p>
+                    <p className="font-mono text-xs text-[#5e8070]">{bean.roast}</p>
+                  </div>
+                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center flex-shrink-0 ${
+                    selectedBeanId === bean.id
+                      ? 'bg-[#80c4a0] border-[#80c4a0]'
+                      : 'border-[#364a40]'
+                  }`}>
+                    {selectedBeanId === bean.id && (
+                      <span className="text-[#0e1210] text-xs leading-none">✓</span>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* STEP 2: マッチング結果（豆選択後に表示） */}
+          {selectedBean && (
+            <div className="bg-[#1a2820] border border-[#80c4a0]/30 rounded-xl p-3 flex flex-col gap-2">
+              <p className="font-mono text-xs text-[#5e8070] uppercase tracking-widest">② マッチング結果</p>
+              <p className="text-sm text-[#eaf4f0] leading-snug">
+                {selectedBean.matchTags.map(t => `「${t}」`).join('・')}系が好きな顧客
+                <span className="text-[#80c4a0] font-medium"> {selectedBean.matchCount}人</span>が対象です
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {selectedBean.matchTags.map(tag => (
+                  <span key={tag} className="font-mono text-xs text-[#80c4a0] bg-[#80c4a0]/10 border border-[#80c4a0]/20 px-2 py-0.5 rounded-full">{tag}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3: 送信ボタン */}
           <button
-            onClick={() => { setModal('newbean'); setSent(false) }}
-            className="w-full bg-[#80c4a0] text-[#0e1210] font-mono text-xs uppercase tracking-widest py-3 rounded-xl"
+            onClick={openNewBeanModal}
+            disabled={!selectedBean}
+            className={`w-full font-mono text-xs uppercase tracking-widest py-3 rounded-xl transition-all ${
+              selectedBean
+                ? 'bg-[#80c4a0] text-[#0e1210]'
+                : 'bg-[#232e28] text-[#5e8070] border border-[#364a40] cursor-not-allowed'
+            }`}
           >
-            通知を送る →
+            {selectedBean ? `${selectedBean.matchCount}人に通知を送る →` : '豆を選んでください'}
           </button>
         </div>
 
@@ -430,8 +502,17 @@ export default function ShopPage() {
             <div className="flex items-center justify-between">
               <div>
                 <span className="font-mono text-xs text-[#80c4a0] bg-[#80c4a0]/15 border border-[#6ab08a]/20 px-2 py-0.5 rounded uppercase tracking-widest">新豆マッチ</span>
-                <p className="text-sm text-[#eaf4f0] font-medium mt-2">通知メッセージ</p>
-                <p className="font-mono text-xs text-[#5e8070]">対象 7人 · LINE登録済み</p>
+                {selectedBean && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="w-6 h-6 rounded-md overflow-hidden border border-[#364a40] flex-shrink-0">
+                      <img src={selectedBean.img} alt={selectedBean.name} className="w-full h-full object-cover" />
+                    </div>
+                    <p className="text-sm text-[#eaf4f0] font-medium">{selectedBean.name}</p>
+                  </div>
+                )}
+                <p className="font-mono text-xs text-[#5e8070] mt-1">
+                  対象 {selectedBean?.matchCount ?? 0}人 · LINE登録済み
+                </p>
               </div>
               <button onClick={() => setModal(null)} className="w-8 h-8 bg-[#232e28] border border-[#364a40] rounded-full flex items-center justify-center text-[#5e8070] text-sm">✕</button>
             </div>
@@ -448,7 +529,7 @@ export default function ShopPage() {
               </div>
             ) : (
               <button onClick={handleSend} className="w-full bg-[#80c4a0] text-[#0e1210] font-mono text-xs uppercase tracking-widest py-3 rounded-xl">
-                7人に送信する →
+                {selectedBean?.matchCount ?? 0}人に送信する →
               </button>
             )}
           </div>
