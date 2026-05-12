@@ -193,7 +193,7 @@ export default function RecordPage() {
               ✓
             </div>
             <div>
-              <h2 className="font-serif text-2xl font-semibold text-text mb-2">ポイントを獲得しました</h2>
+              <h2 className="font-serif text-2xl font-semibold text-text mb-2">テイストを記録しました</h2>
               <p className="text-sm text-text-muted leading-relaxed">
                 {q2.length > 0 ? TASTE_TAGS.filter(t => q2.includes(t.id)).map(t => t.label).join('・') : '記録完了'}<br />
                 プロフィールに反映されました
