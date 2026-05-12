@@ -75,6 +75,7 @@ export default function ShopPage() {
 
   const [recordStep, setRecordStep] = useState<RecordStep>('idle')
   const [selectedBean, setSelectedBean] = useState<string | null>(null)
+  const [stampCount, setStampCount] = useState(1)
 
   const handleSearch = () => {
     const result = MOCK_CUSTOMERS[searchCode.trim()]
@@ -93,6 +94,7 @@ export default function ShopPage() {
   const resetRecord = () => {
     setRecordStep('idle')
     setSelectedBean(null)
+    setStampCount(1)
   }
 
   const beanName = BEANS.find(b => b.id === selectedBean)?.name ?? ''
@@ -184,9 +186,9 @@ export default function ShopPage() {
                   </button>
                 )}
 
-                {/* STEP: 豆選択 */}
+                {/* STEP: 豆選択 + スタンプ数 */}
                 {recordStep === 'bean' && (
-                  <div className="bg-[#1c2420] border border-[#364a40] rounded-xl p-4 flex flex-col gap-3">
+                  <div className="bg-[#1c2420] border border-[#364a40] rounded-xl p-4 flex flex-col gap-4">
                     <div className="flex items-center justify-between">
                       <p className="font-mono text-xs text-[#80c4a0] uppercase tracking-widest">本日の豆を選択</p>
                       <button onClick={resetRecord} className="font-mono text-xs text-[#5e8070]">キャンセル</button>
@@ -211,14 +213,38 @@ export default function ShopPage() {
                         </button>
                       ))}
                     </div>
+
+                    {/* スタンプ数選択 */}
+                    <div className="border-t border-[#364a40] pt-3">
+                      <p className="font-mono text-xs text-[#80c4a0] uppercase tracking-widest mb-3">付与するスタンプ数</p>
+                      <div className="flex items-center justify-between bg-[#232e28] border border-[#364a40] rounded-xl px-4 py-3">
+                        <button
+                          onClick={() => setStampCount(c => Math.max(1, c - 1))}
+                          className="w-8 h-8 rounded-full bg-[#2c3c34] border border-[#364a40] text-[#80c4a0] font-mono text-lg flex items-center justify-center"
+                        >
+                          −
+                        </button>
+                        <div className="text-center">
+                          <span className="font-serif text-3xl font-bold text-[#80c4a0]">{stampCount}</span>
+                          <span className="font-mono text-xs text-[#5e8070] ml-1">個</span>
+                        </div>
+                        <button
+                          onClick={() => setStampCount(c => Math.min(10, c + 1))}
+                          className="w-8 h-8 rounded-full bg-[#2c3c34] border border-[#364a40] text-[#80c4a0] font-mono text-lg flex items-center justify-center"
+                        >
+                          ＋
+                        </button>
+                      </div>
+                    </div>
+
                     <button
-                      onClick={() => selectedBean && setRecordStep('q1')}
+                      onClick={() => selectedBean && setRecordStep('done')}
                       disabled={!selectedBean}
                       className={`w-full font-mono text-xs py-3 rounded-xl uppercase tracking-wide transition-all ${
                         selectedBean ? 'bg-[#80c4a0] text-[#0e1210]' : 'bg-[#2c3c34] text-[#3c5448] border border-[#364a40]'
                       }`}
                     >
-                      次へ →
+                      スタンプ {stampCount}個 を付与する →
                     </button>
                   </div>
                 )}
@@ -228,7 +254,7 @@ export default function ShopPage() {
                   <div className="bg-[#80c4a0]/10 border border-[#80c4a0]/30 rounded-xl p-4 flex flex-col gap-2">
                     <div className="flex items-center gap-2">
                       <span className="text-base">✓</span>
-                      <p className="font-mono text-xs text-[#80c4a0]">スタンプを付与しました</p>
+                      <p className="font-mono text-xs text-[#80c4a0]">スタンプを {stampCount}個 付与しました</p>
                     </div>
                     <p className="font-mono text-xs text-[#5e8070]">{beanName}</p>
                     <button
