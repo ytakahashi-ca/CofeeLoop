@@ -5,7 +5,7 @@ import Link from 'next/link'
 export default function RegisterPage() {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
-  const [lineId, setLineId] = useState('')
+  const [lineLinked, setLineLinked] = useState(false)
   const [code, setCode] = useState<string | null>(null)
   const [phoneError, setPhoneError] = useState('')
 
@@ -37,7 +37,7 @@ export default function RegisterPage() {
       code: newCode,
       name: name.trim(),
       phone: normalized,
-      lineId: lineId.trim(),
+      lineLinked,
     }))
     setCode(newCode)
   }
@@ -126,21 +126,46 @@ export default function RegisterPage() {
             )}
           </div>
 
-          {/* LINE ID */}
+          {/* LINE 連携 */}
           <div>
             <label className="font-mono text-xs text-text-muted uppercase tracking-widest mb-2 block">
-              LINE ID <span className="text-text-muted">(任意)</span>
+              LINE連携 <span className="text-text-muted">(任意)</span>
             </label>
-            <input
-              type="text"
-              value={lineId}
-              onChange={e => setLineId(e.target.value)}
-              placeholder="例：@coffeelover"
-              className="w-full bg-surface2 border border-border rounded-xl px-4 py-3 text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-accent transition-colors"
-            />
-            <p className="font-mono text-xs text-text-muted mt-1.5 leading-relaxed">
-              登録するとお店からの通知を受け取れます
-            </p>
+            {lineLinked ? (
+              <div className="flex items-center justify-between bg-[#06c755]/10 border border-[#06c755]/40 rounded-xl px-4 py-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-6 h-6 bg-[#06c755] rounded-md flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white"><path d="M12 2C6.48 2 2 6.08 2 11.1c0 3.53 2.16 6.62 5.41 8.37-.19.71-.7 2.6-.8 3.01-.13.52.19.51.4.37.16-.1 2.6-1.72 3.65-2.41.44.06.89.09 1.34.09 5.52 0 10-4.08 10-9.1C22 6.08 17.52 2 12 2z"/></svg>
+                  </div>
+                  <div>
+                    <p className="text-sm text-[#06c755] font-medium">LINE連携済み</p>
+                    <p className="font-mono text-xs text-text-muted">新着通知を受け取れます</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setLineLinked(false)}
+                  className="font-mono text-xs text-text-muted underline underline-offset-2"
+                >
+                  解除
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setLineLinked(true)}
+                className="w-full flex items-center justify-center gap-2.5 bg-[#06c755] hover:bg-[#05b34c] active:bg-[#04a044] rounded-xl px-4 py-3.5 transition-colors"
+              >
+                <div className="w-6 h-6 bg-white/20 rounded-md flex items-center justify-center flex-shrink-0">
+                  <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white"><path d="M12 2C6.48 2 2 6.08 2 11.1c0 3.53 2.16 6.62 5.41 8.37-.19.71-.7 2.6-.8 3.01-.13.52.19.51.4.37.16-.1 2.6-1.72 3.65-2.41.44.06.89.09 1.34.09 5.52 0 10-4.08 10-9.1C22 6.08 17.52 2 12 2z"/></svg>
+                </div>
+                <span className="text-white font-medium text-sm tracking-wide">LINEでログイン</span>
+              </button>
+            )}
+            {!lineLinked && (
+              <p className="font-mono text-xs text-text-muted mt-1.5 leading-relaxed">
+                連携するとお店からの通知を受け取れます
+              </p>
+            )}
           </div>
         </div>
 
