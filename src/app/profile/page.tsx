@@ -1,12 +1,46 @@
 'use client'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
 
-const STAMPS = Array.from({ length: 10 }, (_, i) => ({
-  id: i,
-  type: i < 7 ? 'purchase' : 'empty',
-}))
+const MY_CODE = '1234'
+const STAMP_MAX = 10
+
+type HistoryEntry = {
+  beanId: string
+  beanName: string
+  detail: string
+  rating: string
+  tags: string[]
+  date: string
+  timestamp: number
+}
+
+const MOCK_HISTORY: HistoryEntry[] = [
+  { beanId: '1', beanName: 'エチオピア イルガチェフェ', detail: '浅煎り / ナチュラル', rating: '好き', tags: [], date: '今日', timestamp: Date.now() },
+  { beanId: '2', beanName: 'ケニア AA', detail: '中煎り / ウォッシュド', rating: '好き', tags: [], date: '3日前', timestamp: Date.now() - 3 * 86400000 },
+  { beanId: '4', beanName: 'グアテマラ アンティグア', detail: '中深煎り / ウォッシュド', rating: 'ふつう', tags: [], date: '1週間前', timestamp: Date.now() - 7 * 86400000 },
+  { beanId: '3', beanName: 'コロンビア ナリーニョ', detail: '浅煎り / ハニー', rating: '好き', tags: [], date: '10日前', timestamp: Date.now() - 10 * 86400000 },
+]
 
 export default function ProfilePage() {
+  const [stampsCount, setStampsCount] = useState(7)
+  const [history, setHistory] = useState<HistoryEntry[]>(MOCK_HISTORY)
+
+  useEffect(() => {
+    const stored: Record<string, number> = JSON.parse(localStorage.getItem('cl_stamps') || '{}')
+    if (stored[MY_CODE] !== undefined) setStampsCount(stored[MY_CODE])
+
+    const hist: HistoryEntry[] = JSON.parse(localStorage.getItem('cl_history') || '[]')
+    if (hist.length > 0) setHistory(hist)
+  }, [])
+
+  const stamps = Array.from({ length: STAMP_MAX }, (_, i) => ({
+    id: i,
+    type: i < stampsCount ? 'purchase' : 'empty',
+  }))
+  const remaining = Math.max(0, STAMP_MAX - stampsCount)
+  const pct = Math.min(100, Math.round((stampsCount / STAMP_MAX) * 100))
+
   return (
     <div className="flex flex-col min-h-screen bg-bg pb-24">
       {/* ナビゲーション */}
@@ -44,14 +78,16 @@ export default function ProfilePage() {
               <p className="font-serif text-base text-[#f8e068]">Koffee Mameya</p>
             </div>
             <div className="text-right">
-              <p className="font-mono text-sm text-gold font-medium">7 / 10</p>
-              <p className="font-mono text-xs text-[#a08852]">あと3つで特典</p>
+              <p className="font-mono text-sm text-gold font-medium">{stampsCount} / {STAMP_MAX}</p>
+              <p className="font-mono text-xs text-[#a08852]">
+                {remaining > 0 ? `あと${remaining}つで特典` : '特典達成！'}
+              </p>
             </div>
           </div>
 
           {/* スタンプグリッド */}
           <div className="grid grid-cols-5 gap-2 mb-3">
-            {STAMPS.map(stamp => (
+            {stamps.map(stamp => (
               <div key={stamp.id} className={`aspect-square rounded-full flex items-center justify-center text-lg border ${
                 stamp.type === 'purchase'
                   ? 'bg-gradient-to-br from-[#f0cc50] to-[#c08c28] border-[#e0c040] shadow-md'
@@ -64,7 +100,7 @@ export default function ProfilePage() {
 
           {/* バー */}
           <div className="bg-[#301c0c] rounded h-1 mb-3 overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-[#c08c28] to-[#e0c040] rounded" style={{ width: '70%' }} />
+            <div className="h-full bg-gradient-to-r from-[#c08c28] to-[#e0c040] rounded" style={{ width: `${pct}%` }} />
           </div>
 
           {/* 特典 */}
@@ -88,31 +124,28 @@ export default function ProfilePage() {
           <div className="flex justify-between items-center mb-4">
             <p className="font-mono text-xs text-text-muted uppercase tracking-widest">飲んだ豆の履歴</p>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded-full">最新5件</span>
+              <span className="font-mono text-xs text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded-full">最新{history.slice(0, 5).length}件</span>
               <Link href="/record" className="font-mono text-xs text-bg bg-accent px-2.5 py-1 rounded-full">
                 ＋ 追加
               </Link>
             </div>
           </div>
           <div className="flex flex-col divide-y divide-border">
-            {[
-              { name: 'エチオピア イルガチェフェ', detail: '浅煎り / ナチュラル — 今日', rating: '好き', ratingColor: 'text-accent' },
-              { name: 'ケニア AA',               detail: '中煎り / ウォッシュド — 3日前', rating: '好き', ratingColor: 'text-accent' },
-              { name: 'グアテマラ アンティグア',   detail: '中深煎り — 1週間前', rating: 'ふつう', ratingColor: 'text-text-muted' },
-              { name: 'コロンビア ナリーニョ',     detail: '浅煎り / ハニー — 10日前', rating: '好き', ratingColor: 'text-accent' },
-              { name: 'ブラジル セラード',         detail: '深煎り / ナチュラル — 2週間前', rating: 'ふつう', ratingColor: 'text-text-muted' },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-3 py-3">
-                <div className={`w-2 h-2 rounded-full flex-shrink-0 ${i === 0 ? 'bg-accent' : 'bg-accent-dark'}`} />
-                <div className="flex-1">
-                  <p className="text-xs text-text">{item.name}</p>
-                  <p className="font-mono text-xs text-text-muted">{item.detail}</p>
+            {history.slice(0, 5).map((item, i) => {
+              const ratingColor = item.rating === '好き' ? 'text-accent' : item.rating === '× 苦手' ? 'text-red-400' : 'text-text-muted'
+              return (
+                <div key={i} className="flex items-center gap-3 py-3">
+                  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${i === 0 ? 'bg-accent' : 'bg-accent-dark'}`} />
+                  <div className="flex-1">
+                    <p className="text-xs text-text">{item.beanName}</p>
+                    <p className="font-mono text-xs text-text-muted">{item.detail} — {item.date}</p>
+                  </div>
+                  <span className={`text-xs ${ratingColor} bg-accent/10 border border-accent/15 px-2 py-0.5 rounded-full`}>
+                    {item.rating}
+                  </span>
                 </div>
-                <span className={`text-xs ${item.ratingColor} bg-accent/10 border border-accent/15 px-2 py-0.5 rounded-full`}>
-                  {item.rating}
-                </span>
-              </div>
-            ))}
+              )
+            })}
           </div>
           <p className="font-mono text-xs text-accent text-center mt-3">全件見る →</p>
         </div>

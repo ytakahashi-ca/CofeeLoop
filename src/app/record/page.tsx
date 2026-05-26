@@ -23,6 +23,26 @@ export default function RecordPage() {
 
   const next = (nextStep: Step) => setStep(nextStep)
 
+  const saveAndDone = () => {
+    const bean = BEANS.find(b => b.id === selectedBean)
+    if (bean) {
+      const ratingMap: Record<string, string> = { like: '好き', normal: 'ふつう', dislike: '× 苦手' }
+      const tagLabels = TASTE_TAGS.filter(t => q2.includes(t.id)).map(t => t.label)
+      const entry = {
+        beanId: bean.id,
+        beanName: bean.name,
+        detail: `${bean.roast} / ${bean.process}`,
+        rating: ratingMap[q1 ?? 'normal'] ?? 'ふつう',
+        tags: tagLabels,
+        date: '今日',
+        timestamp: Date.now(),
+      }
+      const history = JSON.parse(localStorage.getItem('cl_history') || '[]')
+      localStorage.setItem('cl_history', JSON.stringify([entry, ...history].slice(0, 20)))
+    }
+    next('done')
+  }
+
   const toggleQ2 = (id: string) => {
     if (q2.includes(id)) {
       setQ2(q2.filter(t => t !== id))
@@ -180,7 +200,7 @@ export default function RecordPage() {
               ))}
             </div>
             <p className="font-mono text-xs text-text-muted">※ 1〜2個まで選べます</p>
-            <button onClick={() => next('done')} className="btn-primary mt-auto">
+            <button onClick={saveAndDone} className="btn-primary mt-auto">
               保存して完了
             </button>
           </div>

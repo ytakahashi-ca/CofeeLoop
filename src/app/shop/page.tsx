@@ -105,10 +105,25 @@ export default function ShopPage() {
   }
 
   const handleSearch = () => {
-    const result = MOCK_CUSTOMERS[searchCode.trim()]
-    setSearchResult(result ?? null)
+    const mock = MOCK_CUSTOMERS[searchCode.trim()]
+    if (mock) {
+      const stored: Record<string, number> = JSON.parse(localStorage.getItem('cl_stamps') || '{}')
+      const stamps = stored[searchCode.trim()] ?? mock.stamps
+      setSearchResult({ ...mock, stamps })
+    } else {
+      setSearchResult(null)
+    }
     setRecordStep('idle')
     setStampCount(1)
+  }
+
+  const handleGiveStamp = () => {
+    const stored: Record<string, number> = JSON.parse(localStorage.getItem('cl_stamps') || '{}')
+    const current = stored[searchCode] ?? searchResult?.stamps ?? 0
+    stored[searchCode] = current + stampCount
+    localStorage.setItem('cl_stamps', JSON.stringify(stored))
+    if (searchResult) setSearchResult({ ...searchResult, stamps: stored[searchCode] })
+    setRecordStep('done')
   }
 
   const handleCopyUrl = () => {
@@ -236,7 +251,7 @@ export default function ShopPage() {
                       </button>
                     </div>
                     <button
-                      onClick={() => setRecordStep('done')}
+                      onClick={handleGiveStamp}
                       className="w-full bg-[#80c4a0] text-[#0e1210] font-mono text-xs py-3 rounded-xl uppercase tracking-wide"
                     >
                       スタンプ {stampCount}個 を付与する →
