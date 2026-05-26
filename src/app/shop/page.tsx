@@ -421,8 +421,6 @@ export default function ShopPage() {
         {[
           { href: '/shop', icon: '📊', label: 'ホーム', active: true },
           { href: '/shop/customers', icon: '👥', label: '顧客', active: false },
-          { href: '/shop/notifications', icon: '🔔', label: '通知', active: false },
-          { href: '#', icon: '⚙', label: '設定', active: false },
         ].map(tab => (
           <Link key={tab.label} href={tab.href} className="flex-1 flex flex-col items-center gap-0.5">
             <span className="text-base">{tab.icon}</span>
