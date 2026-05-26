@@ -117,12 +117,8 @@ export default function RegisterPage() {
                 phoneError ? 'border-red-400 focus:border-red-400' : 'border-border focus:border-accent'
               }`}
             />
-            {phoneError ? (
+            {phoneError && (
               <p className="font-mono text-xs text-red-400 mt-1.5">{phoneError}</p>
-            ) : (
-              <p className="font-mono text-xs text-text-muted mt-1.5">
-                同じ番号での重複登録はできません
-              </p>
             )}
           </div>
 
