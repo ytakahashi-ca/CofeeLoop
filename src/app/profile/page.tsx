@@ -60,7 +60,7 @@ export default function ProfilePage() {
       <div className="flex items-center justify-between px-5 pt-12 pb-4">
         <Link href="/" className="w-8 h-8 bg-surface2 border border-border rounded-full flex items-center justify-center text-sm">←</Link>
         <h1 className="font-serif text-lg font-semibold text-text">マイプロフィール</h1>
-        <Link href="/notifications" className="w-8 h-8 bg-surface2 border border-border rounded-full flex items-center justify-center text-sm">🔔</Link>
+        <div className="w-8 h-8" />
       </div>
 
       <div className="flex flex-col gap-4 px-5">
