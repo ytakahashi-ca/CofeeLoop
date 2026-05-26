@@ -83,9 +83,6 @@ export default function RegisterPage() {
           <p className="font-serif text-2xl font-semibold text-text leading-snug mb-2">
             はじめまして。<br />まずは登録を。
           </p>
-          <p className="font-mono text-xs text-text-muted leading-relaxed">
-            登録後に発行される4桁の番号を<br />来店時にバリスタへお伝えください。
-          </p>
         </div>
 
         <div className="flex flex-col gap-4">
