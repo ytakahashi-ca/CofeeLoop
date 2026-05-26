@@ -57,7 +57,7 @@ export default function ProfilePage() {
       <div className="flex items-center justify-between px-5 pt-12 pb-4">
         <Link href="/" className="w-8 h-8 bg-surface2 border border-border rounded-full flex items-center justify-center text-sm">←</Link>
         <h1 className="font-serif text-lg font-semibold text-text">マイプロフィール</h1>
-        <div className="w-8 h-8 bg-surface2 border border-border rounded-full flex items-center justify-center text-sm text-text-muted">⋯</div>
+        <div className="w-8 h-8" />
       </div>
 
       <div className="flex flex-col gap-4 px-5">
@@ -176,10 +176,8 @@ export default function ProfilePage() {
       {/* タブバー */}
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm flex border-t border-border bg-surface pt-2.5 pb-1">
         {[
-          { href: '/', icon: '🏠', label: 'ホーム', active: false },
           { href: '/profile', icon: '☕', label: 'プロフィール', active: true },
           { href: '/notifications', icon: '🔔', label: '通知', active: false },
-          { href: '#', icon: '⚙', label: '設定', active: false },
         ].map(tab => (
           <Link key={tab.label} href={tab.href} className="flex-1 flex flex-col items-center gap-0.5">
             <span className="text-lg">{tab.icon}</span>
