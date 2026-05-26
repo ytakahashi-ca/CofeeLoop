@@ -10,7 +10,9 @@ export default function RegisterPage() {
   const handleSubmit = () => {
     if (!name.trim()) return
     const num = Math.floor(Math.random() * 9000) + 1000
-    setCode(String(num))
+    const newCode = String(num)
+    localStorage.setItem('cl_user', JSON.stringify({ code: newCode, name: name.trim() }))
+    setCode(newCode)
   }
 
   if (code) {

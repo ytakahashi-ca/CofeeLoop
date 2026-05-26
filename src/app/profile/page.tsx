@@ -2,7 +2,6 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
-const MY_CODE = '1234'
 const STAMP_MAX = 10
 
 type HistoryEntry = {
@@ -23,12 +22,19 @@ const MOCK_HISTORY: HistoryEntry[] = [
 ]
 
 export default function ProfilePage() {
+  const [myCode, setMyCode] = useState('1234')
+  const [myName, setMyName] = useState('')
   const [stampsCount, setStampsCount] = useState(7)
   const [history, setHistory] = useState<HistoryEntry[]>(MOCK_HISTORY)
 
   useEffect(() => {
+    const user: { code: string; name: string } | null = JSON.parse(localStorage.getItem('cl_user') || 'null')
+    const code = user?.code ?? '1234'
+    setMyCode(code)
+    if (user?.name) setMyName(user.name)
+
     const stored: Record<string, number> = JSON.parse(localStorage.getItem('cl_stamps') || '{}')
-    if (stored[MY_CODE] !== undefined) setStampsCount(stored[MY_CODE])
+    if (stored[code] !== undefined) setStampsCount(stored[code])
 
     const hist: HistoryEntry[] = JSON.parse(localStorage.getItem('cl_history') || '[]')
     if (hist.length > 0) setHistory(hist)
@@ -58,7 +64,7 @@ export default function ProfilePage() {
             <p className="font-mono text-xs text-text-muted uppercase tracking-widest mb-1">あなたの番号</p>
             <p className="font-mono text-xs text-text-muted leading-relaxed">来店時にバリスタへ伝えてください</p>
           </div>
-          <p className="font-serif text-4xl font-bold text-accent tracking-[0.2em]">1234</p>
+          <p className="font-serif text-4xl font-bold text-accent tracking-[0.2em]">{myCode}</p>
         </div>
 
         {/* 一言サマリー */}
