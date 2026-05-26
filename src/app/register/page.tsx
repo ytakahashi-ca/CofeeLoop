@@ -142,12 +142,6 @@ export default function RegisterPage() {
                     <p className="font-mono text-xs text-text-muted">新着通知を受け取れます</p>
                   </div>
                 </div>
-                <button
-                  onClick={() => setLineLinked(false)}
-                  className="font-mono text-xs text-text-muted underline underline-offset-2"
-                >
-                  解除
-                </button>
               </div>
             ) : (
               <button
