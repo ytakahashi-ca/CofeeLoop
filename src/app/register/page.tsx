@@ -62,8 +62,8 @@ export default function RegisterPage() {
           </p>
         </div>
         <div className="w-full flex flex-col gap-3">
-          <Link href="/user" className="btn-primary text-center block">
-            ホームへ
+          <Link href="/profile" className="btn-primary text-center block">
+            ポイントカードを見る
           </Link>
         </div>
       </div>
