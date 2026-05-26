@@ -13,14 +13,18 @@ export default function UserHomePage() {
     setLoggedIn(!!session)
   }, [])
 
+  const SHOP_NAME = 'Koffee Mameya'
+  const SHOP_TAGLINE = 'Specialty Coffee'
+
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen px-6 gap-8">
-      {/* ロゴ */}
+    <main className="flex flex-col items-center justify-center min-h-screen px-6 gap-8 relative">
+      {/* 店舗ロゴ */}
       <div className="text-center">
-        <h1 className="font-serif text-5xl font-bold text-accent mb-2">CoffeeLoop.</h1>
-        <p className="font-mono text-xs text-text-muted tracking-widest uppercase">
-          Specialty Coffee SaaS
-        </p>
+        <div className="w-20 h-20 rounded-2xl bg-surface2 border border-border flex items-center justify-center text-4xl mx-auto mb-4">
+          ☕
+        </div>
+        <h1 className="font-serif text-3xl font-bold text-text mb-1">{SHOP_NAME}</h1>
+        <p className="font-mono text-xs text-text-muted tracking-widest uppercase">{SHOP_TAGLINE}</p>
       </div>
 
       {/* ユーザーメニュー */}
@@ -42,10 +46,12 @@ export default function UserHomePage() {
         )}
       </div>
 
-      {/* 戻るリンク */}
-      <Link href="/" className="font-mono text-xs text-text-muted underline underline-offset-4">
-        ← トップに戻る
-      </Link>
+      {/* Powered by */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+        <p className="font-mono text-xs text-text-muted tracking-widest">
+          Powered by <span className="text-accent font-semibold">CoffeeLoop.</span>
+        </p>
+      </div>
     </main>
   )
 }
