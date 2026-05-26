@@ -15,12 +15,6 @@ type HistoryEntry = {
   timestamp: number
 }
 
-const MOCK_HISTORY: HistoryEntry[] = [
-  { beanId: '1', beanName: 'エチオピア イルガチェフェ', detail: '浅煎り / ナチュラル', rating: '好き', tags: [], date: '今日', timestamp: Date.now() },
-  { beanId: '2', beanName: 'ケニア AA', detail: '中煎り / ウォッシュド', rating: '好き', tags: [], date: '3日前', timestamp: Date.now() - 3 * 86400000 },
-  { beanId: '4', beanName: 'グアテマラ アンティグア', detail: '中深煎り / ウォッシュド', rating: 'ふつう', tags: [], date: '1週間前', timestamp: Date.now() - 7 * 86400000 },
-  { beanId: '3', beanName: 'コロンビア ナリーニョ', detail: '浅煎り / ハニー', rating: '好き', tags: [], date: '10日前', timestamp: Date.now() - 10 * 86400000 },
-]
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -44,8 +38,7 @@ export default function ProfilePage() {
     if (stored[code] !== undefined) setStampsCount(stored[code])
 
     const hist: HistoryEntry[] = JSON.parse(localStorage.getItem('cl_history') || '[]')
-    if (hist.length > 0) setHistory(hist)
-    else setHistory(MOCK_HISTORY)
+    setHistory(hist)
     setReady(true)
   }, [])
 
@@ -141,30 +134,41 @@ export default function ProfilePage() {
           <div className="flex justify-between items-center mb-4">
             <p className="font-mono text-xs text-text-muted uppercase tracking-widest">飲んだ豆の履歴</p>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded-full">最新{history.slice(0, 5).length}件</span>
+              {history.length > 0 && (
+                <span className="font-mono text-xs text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded-full">最新{history.slice(0, 5).length}件</span>
+              )}
               <Link href="/record" className="font-mono text-xs text-bg bg-accent px-2.5 py-1 rounded-full">
                 ＋ 追加
               </Link>
             </div>
           </div>
-          <div className="flex flex-col divide-y divide-border">
-            {history.slice(0, 5).map((item, i) => {
-              const ratingColor = item.rating === '好き' ? 'text-accent' : item.rating === '× 苦手' ? 'text-red-400' : 'text-text-muted'
-              return (
-                <div key={i} className="flex items-center gap-3 py-3">
-                  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${i === 0 ? 'bg-accent' : 'bg-accent-dark'}`} />
-                  <div className="flex-1">
-                    <p className="text-xs text-text">{item.beanName}</p>
-                    <p className="font-mono text-xs text-text-muted">{item.detail} — {item.date}</p>
-                  </div>
-                  <span className={`text-xs ${ratingColor} bg-accent/10 border border-accent/15 px-2 py-0.5 rounded-full`}>
-                    {item.rating}
-                  </span>
-                </div>
-              )
-            })}
-          </div>
-          <p className="font-mono text-xs text-accent text-center mt-3">全件見る →</p>
+          {history.length === 0 ? (
+            <div className="py-6 text-center">
+              <p className="text-sm text-text-muted">まだ記録がありません</p>
+              <p className="font-mono text-xs text-text-muted mt-1">＋ 追加から記録してみましょう</p>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-col divide-y divide-border">
+                {history.slice(0, 5).map((item, i) => {
+                  const ratingColor = item.rating === '好き' ? 'text-accent' : item.rating === '× 苦手' ? 'text-red-400' : 'text-text-muted'
+                  return (
+                    <div key={i} className="flex items-center gap-3 py-3">
+                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${i === 0 ? 'bg-accent' : 'bg-accent-dark'}`} />
+                      <div className="flex-1">
+                        <p className="text-xs text-text">{item.beanName}</p>
+                        <p className="font-mono text-xs text-text-muted">{item.detail} — {item.date}</p>
+                      </div>
+                      <span className={`text-xs ${ratingColor} bg-accent/10 border border-accent/15 px-2 py-0.5 rounded-full`}>
+                        {item.rating}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+              <p className="font-mono text-xs text-accent text-center mt-3">全件見る →</p>
+            </>
+          )}
         </div>
 
       </div>
