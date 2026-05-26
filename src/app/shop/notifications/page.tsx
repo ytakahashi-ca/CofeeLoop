@@ -13,16 +13,6 @@ const NOTIFICATIONS = [
     color: '#80c4a0',
   },
   {
-    id: 2,
-    type: 'alert',
-    title: '未来店アラート — 4件',
-    body: '7日以上来店がない顧客が4人います。リマインド通知の送信をご検討ください。',
-    time: '1時間前',
-    unread: true,
-    icon: '⚠️',
-    color: '#e8a878',
-  },
-  {
     id: 3,
     type: 'stamp',
     title: 'スタンプ達成 — 常連 A',

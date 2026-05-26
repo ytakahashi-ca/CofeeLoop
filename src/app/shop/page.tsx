@@ -388,22 +388,6 @@ export default function ShopPage() {
           </button>
         </div>
 
-        {/* アクション: 未来店 */}
-        <div className="bg-[#e8a878]/4 border border-[#e8a878] rounded-2xl p-4">
-          <div className="flex items-center justify-between mb-2">
-            <span className="font-mono text-xs text-[#e8a878] bg-[#e8a878]/15 border border-[#e8a878]/20 px-2 py-0.5 rounded uppercase tracking-widest">未来店</span>
-            <span className="font-mono text-xs text-[#5e8070]">対象 4人</span>
-          </div>
-          <p className="text-sm text-[#eaf4f0] mb-1 leading-snug">7日以上来店がない<br />顧客がいます</p>
-          <p className="font-mono text-xs text-[#5e8070] mb-3 leading-relaxed">最終来店から7日以上経過。<br />再来店を促す通知を送りましょう。</p>
-          <button
-            onClick={() => { setModal('remind'); setSent(false) }}
-            className="w-full bg-[#e8a878] text-[#0e1210] font-mono text-xs uppercase tracking-widest py-3 rounded-xl"
-          >
-            リマインドを送る →
-          </button>
-        </div>
-
         {/* 人気ランキング */}
         <div>
           <div className="flex items-center justify-between mb-2">
