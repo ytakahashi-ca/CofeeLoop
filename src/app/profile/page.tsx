@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 const STAMP_MAX = 10
 
@@ -22,23 +23,33 @@ const MOCK_HISTORY: HistoryEntry[] = [
 ]
 
 export default function ProfilePage() {
-  const [myCode, setMyCode] = useState('1234')
+  const router = useRouter()
+  const [ready, setReady] = useState(false)
+  const [myCode, setMyCode] = useState('')
   const [myName, setMyName] = useState('')
-  const [stampsCount, setStampsCount] = useState(7)
-  const [history, setHistory] = useState<HistoryEntry[]>(MOCK_HISTORY)
+  const [stampsCount, setStampsCount] = useState(0)
+  const [history, setHistory] = useState<HistoryEntry[]>([])
 
   useEffect(() => {
     const user: { code: string; name: string } | null = JSON.parse(localStorage.getItem('cl_user') || 'null')
-    const code = user?.code ?? '1234'
+    if (!user) {
+      router.replace('/register')
+      return
+    }
+    const code = user.code
     setMyCode(code)
-    if (user?.name) setMyName(user.name)
+    setMyName(user.name)
 
     const stored: Record<string, number> = JSON.parse(localStorage.getItem('cl_stamps') || '{}')
     if (stored[code] !== undefined) setStampsCount(stored[code])
 
     const hist: HistoryEntry[] = JSON.parse(localStorage.getItem('cl_history') || '[]')
     if (hist.length > 0) setHistory(hist)
+    else setHistory(MOCK_HISTORY)
+    setReady(true)
   }, [])
+
+  if (!ready) return <div className="min-h-screen bg-bg" />
 
   const stamps = Array.from({ length: STAMP_MAX }, (_, i) => ({
     id: i,
