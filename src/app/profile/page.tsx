@@ -20,7 +20,6 @@ export default function ProfilePage() {
   const router = useRouter()
   const [ready, setReady] = useState(false)
   const [myCode, setMyCode] = useState('')
-  const [myName, setMyName] = useState('')
   const [stampsCount, setStampsCount] = useState(0)
   const [history, setHistory] = useState<HistoryEntry[]>([])
 
@@ -37,7 +36,6 @@ export default function ProfilePage() {
     }
     const code = user.code
     setMyCode(code)
-    setMyName(user.name)
 
     const stored: Record<string, number> = JSON.parse(localStorage.getItem('cl_stamps') || '{}')
     if (stored[code] !== undefined) setStampsCount(stored[code])
@@ -74,15 +72,6 @@ export default function ProfilePage() {
             <p className="font-mono text-xs text-text-muted leading-relaxed">来店時にバリスタへ伝えてください</p>
           </div>
           <p className="font-serif text-4xl font-bold text-accent tracking-[0.2em]">{myCode}</p>
-        </div>
-
-        {/* 一言サマリー */}
-        <div className="bg-gradient-to-br from-surface2 to-surface3 border border-border rounded-2xl p-4 flex items-center gap-3">
-          <span className="text-3xl">☕</span>
-          <div>
-            <p className="font-mono text-xs text-text-muted uppercase tracking-widest mb-1">一言サマリー</p>
-            <p className="font-serif text-base text-accent2 leading-snug">最近はフルーティ系が<br />多めです</p>
-          </div>
         </div>
 
         {/* スタンプカード */}

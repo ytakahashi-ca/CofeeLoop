@@ -42,7 +42,7 @@ const MESSAGES = [
 
 export default function NotificationsPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-bg pb-24">
+    <div className="flex flex-col min-h-screen bg-bg pb-8">
       <div className="flex items-center justify-between px-5 pt-12 pb-4 border-b border-border">
         <Link href="/profile" className="w-8 h-8 bg-surface2 border border-border rounded-full flex items-center justify-center text-sm">←</Link>
         <h1 className="font-serif text-lg font-semibold text-text">通知</h1>
@@ -80,20 +80,6 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      {/* タブバー */}
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm flex border-t border-border bg-surface pt-2.5 pb-1">
-        {[
-          { href: '/', icon: '🏠', label: 'ホーム', active: false },
-          { href: '/profile', icon: '☕', label: 'プロフィール', active: false },
-          { href: '/notifications', icon: '🔔', label: '通知', active: true },
-          { href: '#', icon: '⚙', label: '設定', active: false },
-        ].map(tab => (
-          <Link key={tab.label} href={tab.href} className="flex-1 flex flex-col items-center gap-0.5">
-            <span className="text-lg">{tab.icon}</span>
-            <span className={`font-mono text-xs ${tab.active ? 'text-accent' : 'text-text-muted'}`}>{tab.label}</span>
-          </Link>
-        ))}
-      </div>
     </div>
   )
 }
