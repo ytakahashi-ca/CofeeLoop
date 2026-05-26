@@ -129,7 +129,7 @@ export default function RegisterPage() {
           {/* LINE 連携 */}
           <div>
             <label className="font-mono text-xs text-text-muted uppercase tracking-widest mb-2 block">
-              LINE連携 <span className="text-text-muted">(任意)</span>
+              LINE連携
             </label>
             {lineLinked ? (
               <div className="flex items-center justify-between bg-[#06c755]/10 border border-[#06c755]/40 rounded-xl px-4 py-3">
