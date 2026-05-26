@@ -24,3 +24,9 @@ id = "2rBujT2KhFXs9XrMwHrQu"
 uri = "file://public/beans/guatemala.png"
 type = "image"
 title = "generated_image"
+
+[[generated]]
+id = "ChkqMxsTeHdm1-xNXGNEC"
+uri = "file://public/shop-logo.png"
+type = "image"
+title = "koffee-mameya-logo"

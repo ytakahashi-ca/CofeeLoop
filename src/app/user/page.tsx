@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 export default function UserHomePage() {
@@ -20,8 +21,8 @@ export default function UserHomePage() {
     <main className="flex flex-col items-center justify-center min-h-screen px-6 gap-8 relative">
       {/* 店舗ロゴ */}
       <div className="text-center">
-        <div className="w-20 h-20 rounded-2xl bg-surface2 border border-border flex items-center justify-center text-4xl mx-auto mb-4">
-          ☕
+        <div className="w-24 h-24 rounded-2xl overflow-hidden mx-auto mb-4">
+          <Image src="/shop-logo.png" alt={SHOP_NAME} width={96} height={96} className="w-full h-full object-cover" />
         </div>
         <h1 className="font-serif text-3xl font-bold text-text mb-1">{SHOP_NAME}</h1>
         <p className="font-mono text-xs text-text-muted tracking-widest uppercase">{SHOP_TAGLINE}</p>
