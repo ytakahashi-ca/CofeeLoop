@@ -4,16 +4,45 @@ import Link from 'next/link'
 
 export default function RegisterPage() {
   const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
   const [lineId, setLineId] = useState('')
   const [code, setCode] = useState<string | null>(null)
+  const [phoneError, setPhoneError] = useState('')
+
+  const normalizePhone = (v: string) => v.replace(/[-\s]/g, '')
+
+  const handlePhoneChange = (v: string) => {
+    const digits = v.replace(/[^\d\-\s]/g, '')
+    setPhone(digits)
+    setPhoneError('')
+  }
 
   const handleSubmit = () => {
+    const normalized = normalizePhone(phone)
     if (!name.trim()) return
-    const num = Math.floor(Math.random() * 9000) + 1000
-    const newCode = String(num)
-    localStorage.setItem('cl_user', JSON.stringify({ code: newCode, name: name.trim() }))
+    if (normalized.length < 10 || normalized.length > 11) {
+      setPhoneError('正しい電話番号を入力してください（10〜11桁）')
+      return
+    }
+
+    const existing: { code: string; name: string; phone: string } | null =
+      JSON.parse(localStorage.getItem('cl_user') || 'null')
+    if (existing && normalizePhone(existing.phone) === normalized) {
+      setPhoneError('この電話番号はすでに登録されています')
+      return
+    }
+
+    const newCode = String(Math.floor(Math.random() * 9000) + 1000)
+    localStorage.setItem('cl_user', JSON.stringify({
+      code: newCode,
+      name: name.trim(),
+      phone: normalized,
+      lineId: lineId.trim(),
+    }))
     setCode(newCode)
   }
+
+  const canSubmit = name.trim() && normalizePhone(phone).length >= 10
 
   if (code) {
     return (
@@ -36,12 +65,6 @@ export default function RegisterPage() {
           <Link href="/user" className="btn-primary text-center block">
             ホームへ
           </Link>
-          <button
-            onClick={() => { setCode(null); setName(''); setLineId('') }}
-            className="btn-secondary"
-          >
-            別のアカウントを登録
-          </button>
         </div>
       </div>
     )
@@ -80,6 +103,29 @@ export default function RegisterPage() {
             />
           </div>
 
+          {/* 電話番号 */}
+          <div>
+            <label className="font-mono text-xs text-text-muted uppercase tracking-widest mb-2 block">
+              電話番号 <span className="text-accent">*</span>
+            </label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={e => handlePhoneChange(e.target.value)}
+              placeholder="例：09012345678"
+              className={`w-full bg-surface2 border rounded-xl px-4 py-3 text-sm text-text placeholder:text-text-muted focus:outline-none transition-colors ${
+                phoneError ? 'border-red-400 focus:border-red-400' : 'border-border focus:border-accent'
+              }`}
+            />
+            {phoneError ? (
+              <p className="font-mono text-xs text-red-400 mt-1.5">{phoneError}</p>
+            ) : (
+              <p className="font-mono text-xs text-text-muted mt-1.5">
+                同じ番号での重複登録はできません
+              </p>
+            )}
+          </div>
+
           {/* LINE ID */}
           <div>
             <label className="font-mono text-xs text-text-muted uppercase tracking-widest mb-2 block">
@@ -100,8 +146,8 @@ export default function RegisterPage() {
 
         <button
           onClick={handleSubmit}
-          disabled={!name.trim()}
-          className={`btn-primary ${!name.trim() ? 'opacity-40' : ''}`}
+          disabled={!canSubmit}
+          className={`btn-primary ${!canSubmit ? 'opacity-40' : ''}`}
         >
           登録して番号を発行 →
         </button>
