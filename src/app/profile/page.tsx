@@ -30,6 +30,11 @@ export default function ProfilePage() {
       router.replace('/register')
       return
     }
+    const session = sessionStorage.getItem('cl_session')
+    if (!session) {
+      router.replace('/login')
+      return
+    }
     const code = user.code
     setMyCode(code)
     setMyName(user.name)

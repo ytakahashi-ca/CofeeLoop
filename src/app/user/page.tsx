@@ -4,10 +4,13 @@ import { useState, useEffect } from 'react'
 
 export default function UserHomePage() {
   const [registered, setRegistered] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
 
   useEffect(() => {
     const user = localStorage.getItem('cl_user')
+    const session = sessionStorage.getItem('cl_session')
     setRegistered(!!user)
+    setLoggedIn(!!session)
   }, [])
 
   return (
@@ -22,14 +25,21 @@ export default function UserHomePage() {
 
       {/* ユーザーメニュー */}
       <div className="w-full flex flex-col gap-3">
-        {registered && (
+        {loggedIn && (
           <Link href="/profile" className="btn-primary text-center block">
             ポイントカードを見る
           </Link>
         )}
-        <Link href="/register" className="btn-secondary text-center block">
-          新規登録
-        </Link>
+        {registered && !loggedIn && (
+          <Link href="/login" className="btn-primary text-center block">
+            ログイン
+          </Link>
+        )}
+        {!registered && (
+          <Link href="/register" className="btn-secondary text-center block">
+            新規登録
+          </Link>
+        )}
       </div>
 
       {/* 戻るリンク */}

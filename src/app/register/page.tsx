@@ -5,9 +5,12 @@ import Link from 'next/link'
 export default function RegisterPage() {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [lineLinked, setLineLinked] = useState(false)
   const [code, setCode] = useState<string | null>(null)
   const [phoneError, setPhoneError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
 
   const normalizePhone = (v: string) => v.replace(/[-\s]/g, '')
 
@@ -24,6 +27,14 @@ export default function RegisterPage() {
       setPhoneError('正しい電話番号を入力してください（10〜11桁）')
       return
     }
+    if (password.length < 4) {
+      setPasswordError('パスワードは4文字以上で設定してください')
+      return
+    }
+    if (password !== confirmPassword) {
+      setPasswordError('パスワードが一致しません')
+      return
+    }
 
     const existing: { code: string; name: string; phone: string } | null =
       JSON.parse(localStorage.getItem('cl_user') || 'null')
@@ -37,12 +48,14 @@ export default function RegisterPage() {
       code: newCode,
       name: name.trim(),
       phone: normalized,
+      password,
       lineLinked,
     }))
+    sessionStorage.setItem('cl_session', 'true')
     setCode(newCode)
   }
 
-  const canSubmit = name.trim() && normalizePhone(phone).length >= 10
+  const canSubmit = name.trim() && normalizePhone(phone).length >= 10 && password.length >= 4 && confirmPassword.length >= 1
 
   if (code) {
     return (
@@ -116,6 +129,41 @@ export default function RegisterPage() {
             />
             {phoneError && (
               <p className="font-mono text-xs text-red-400 mt-1.5">{phoneError}</p>
+            )}
+          </div>
+
+          {/* パスワード */}
+          <div>
+            <label className="font-mono text-xs text-text-muted uppercase tracking-widest mb-2 block">
+              パスワード <span className="text-accent">*</span>
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={e => { setPassword(e.target.value); setPasswordError('') }}
+              placeholder="4文字以上"
+              className={`w-full bg-surface2 border rounded-xl px-4 py-3 text-sm text-text placeholder:text-text-muted focus:outline-none transition-colors ${
+                passwordError ? 'border-red-400 focus:border-red-400' : 'border-border focus:border-accent'
+              }`}
+            />
+          </div>
+
+          {/* パスワード確認 */}
+          <div>
+            <label className="font-mono text-xs text-text-muted uppercase tracking-widest mb-2 block">
+              パスワード確認 <span className="text-accent">*</span>
+            </label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={e => { setConfirmPassword(e.target.value); setPasswordError('') }}
+              placeholder="もう一度入力"
+              className={`w-full bg-surface2 border rounded-xl px-4 py-3 text-sm text-text placeholder:text-text-muted focus:outline-none transition-colors ${
+                passwordError ? 'border-red-400 focus:border-red-400' : 'border-border focus:border-accent'
+              }`}
+            />
+            {passwordError && (
+              <p className="font-mono text-xs text-red-400 mt-1.5">{passwordError}</p>
             )}
           </div>
 
